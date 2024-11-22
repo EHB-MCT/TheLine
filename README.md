@@ -56,8 +56,8 @@ Follow the steps below to set up the Unity project on your local machine.
 
 ## Contact
 Voor vragen of feedback, neem contact op via:
-- Email: [jouw-email@example.com](mailto:jouw-email@example.com)
-- GitHub: [jouw-github-profiel](https://github.com/jouw-gebruikersnaam)
+- Email: [alexander.mersseman2003@gmail.com](mail to: alexander.mersseman2003@gmail.com)
+- GitHub: [ALEXANDERMERSSEMAN](https://github.com/ALEXANDERMERSSEMAN)
 
 ## License
 This product is distributed under the Apache License, Version 2.0. You can review the full license agreement at the following link: [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
@@ -65,5 +65,4 @@ This product is distributed under the Apache License, Version 2.0. You can revie
 You may use this product free of charge, provided that you comply with the terms of the Apache License. For non-commercial use, this product is available for free.
 
 ## Attribution
-- Special thanks to [ChatGPT](https://chatgpt.com/share/67101848-7384-8003-b00e-a0e3b6c176f7) for helping to estabish my starter file.
-- Special thanks to [Simon Esposito] (https://github.com/heroiclabs/unity-sampleproject/tree/master?tab=Apache-2.0-1-ov-file) for helpint me with my license & readme.
+- Special thanks to []().
