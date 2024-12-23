@@ -52,8 +52,11 @@ public class LineMechanicsManager : MonoBehaviour
         if (isDrawing && endPointHandler.IsLineTouchingEndPoint(lineDrawer.GetPoints()))
         {
             Debug.Log("GAME WON");
+
+            // Roep de LevelManager aan om naar het volgende level te gaan
+            LevelManager.Instance.LoadNextScene();
+
             isDrawing = false;
         }
     }
 }
-
