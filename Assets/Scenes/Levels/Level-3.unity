@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 116529981}
   - component: {fileID: 116529983}
   m_Layer: 5
-  m_Name: END
+  m_Name: End Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -157,7 +157,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 320, y: -55}
+  m_AnchoredPosition: {x: 450, y: -100}
   m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &116529981
@@ -646,7 +646,7 @@ GameObject:
   - component: {fileID: 659327617}
   - component: {fileID: 659327615}
   m_Layer: 5
-  m_Name: START
+  m_Name: Start Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -668,7 +668,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -65, y: -20}
+  m_AnchoredPosition: {x: 650, y: 280}
   m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!58 &659327615
@@ -840,6 +840,7 @@ RectTransform:
   m_Children:
   - {fileID: 659327614}
   - {fileID: 116529980}
+  - {fileID: 1661954698}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -858,7 +859,7 @@ GameObject:
   - component: {fileID: 1661954698}
   - component: {fileID: 1661954697}
   m_Layer: 0
-  m_Name: BACKGROUND
+  m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -924,12 +925,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1661954696}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.35, y: 0, z: 3}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -959.65, y: -540, z: 3}
   m_LocalScale: {x: 1, y: 1, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1111383455}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1953714767
 GameObject:
@@ -1006,6 +1007,5 @@ SceneRoots:
   - {fileID: 186882574}
   - {fileID: 199650539}
   - {fileID: 501346835}
-  - {fileID: 1661954698}
   - {fileID: 1111383455}
   - {fileID: 1953714770}
