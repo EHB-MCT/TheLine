@@ -45,7 +45,7 @@ public class LineDrawer : MonoBehaviour
         if (Input.GetMouseButton(0) && isDrawing)
         {
             Vector3 mousePos = Input.mousePosition;
-            mousePos.z = 10f; // Afstand van de camera
+            mousePos.z = 2f; // Afstand van de camera
             Vector3 worldPos = Camera.main.ScreenToWorldPoint(mousePos);
             UpdateLine(worldPos);
         }
@@ -68,7 +68,7 @@ public class LineDrawer : MonoBehaviour
     private bool IsMouseOverStartPoint()
     {
         Vector3 mousePos = Input.mousePosition;
-        mousePos.z = 10f; // Afstand van de camera
+        mousePos.z = 2f; // Afstand van de camera
         Vector3 worldPos = Camera.main.ScreenToWorldPoint(mousePos);
 
         // Controleer of de muis binnen een straal van 0.5 van het startpunt is
@@ -82,12 +82,16 @@ public class LineDrawer : MonoBehaviour
         points.Clear();
         lineRenderer.positionCount = 0;
 
-        points.Add(startPosition);
+        // Controleer of de positie van het startpunt correct is
+        Vector3 worldStartPosition = Camera.main.ScreenToWorldPoint(startPosition);
+        worldStartPosition.z = 0; // Zorg dat Z op 0 staat in 2D-ruimte
+
+        points.Add(worldStartPosition); // Gebruik de correcte wereldpositie
         lineRenderer.positionCount = points.Count;
-        lineRenderer.SetPosition(0, startPosition);
+        lineRenderer.SetPosition(0, worldStartPosition);
 
         // Reset de collider
-        edgeCollider.points = new Vector2[0]; // Reset de collider voordat je nieuwe lijn start
+        edgeCollider.points = new Vector2[0];
     }
 
     public void UpdateLine(Vector3 position)

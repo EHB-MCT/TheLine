@@ -1,15 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;  // Voeg deze namespace toe voor scene management
+using UnityEngine.SceneManagement;
 
 public class MainMenuManager : MonoBehaviour
 {
-    // Methode om naar het eerste level te gaan
+    // Laad de eerste scène (bijvoorbeeld het spel)
     public void StartGame()
     {
-        // Zorg ervoor dat het eerste level de juiste build index heeft in je Build Settings
-        SceneManager.LoadScene(1); // Laad scène met index 1 (je eerste level)
+        Debug.Log("Starting the game...");
+        SceneManager.LoadScene(2); // Laad scène met index 1
+    }
+
+    // Laad de leaderboard scène
+    public void GoToLeaderboard()
+    {
+        Debug.Log("Going to the leaderboard...");
+        SceneManager.LoadScene("Leaderboard"); // Zorg dat de scène "Leaderboard" heet
+    }
+
+    // Terugkeren naar het hoofdmenu
+    public void BackToMainMenu()
+    {
+        Debug.Log("Returning to the main menu...");
+        SceneManager.LoadScene("MainMenu"); // Zorg dat de scène "MainMenu" heet
     }
 }
-

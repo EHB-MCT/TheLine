@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class LineMechanicsManager : MonoBehaviour
 {
-    public Transform startPoint;
-    public Transform endPoint;
+    public RectTransform startPoint;
+    public RectTransform endPoint;
 
     private StartPointHandler startPointHandler;
     private EndPointHandler endPointHandler;
@@ -39,7 +39,7 @@ public class LineMechanicsManager : MonoBehaviour
         if (Input.GetMouseButton(0) && isDrawing)
         {
             Vector3 mousePos = Input.mousePosition;
-            mousePos.z = 10f;
+            mousePos.z = 2f;
             Vector3 worldPos = mainCamera.ScreenToWorldPoint(mousePos);
             lineDrawer.UpdateLine(worldPos);
         }

@@ -4,14 +4,22 @@ using UnityEngine;
 
 public class EndPointHandler : MonoBehaviour
 {
-    public Transform endPoint;
+    public RectTransform endPoint; // Gebruik nu een RectTransform
+    private Canvas canvas;
+
+    void Start()
+    {
+        canvas = endPoint.GetComponentInParent<Canvas>(); // Haal de Canvas op (nodig voor conversie)
+    }
 
     public bool IsLineTouchingEndPoint(List<Vector3> points)
     {
         foreach (Vector3 point in points)
         {
-            float distance = Vector3.Distance(point, endPoint.position);
-            if (distance <= 0.1f) // Pas deze straal aan indien nodig
+            Vector2 screenPoint = Camera.main.WorldToScreenPoint(point); // Converteer punt naar schermruimte
+
+            // Controleer of het punt binnen de RectTransform valt
+            if (RectTransformUtility.RectangleContainsScreenPoint(endPoint, screenPoint, canvas.worldCamera))
             {
                 return true;
             }
@@ -19,3 +27,4 @@ public class EndPointHandler : MonoBehaviour
         return false;
     }
 }
+

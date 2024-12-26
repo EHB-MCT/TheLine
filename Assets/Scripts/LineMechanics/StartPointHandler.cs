@@ -4,22 +4,25 @@ using UnityEngine;
 
 public class StartPointHandler : MonoBehaviour
 {
-    public Transform startPoint;
-    private Camera mainCamera;
+    public RectTransform startPoint; // Gebruik nu een RectTransform
+    private Canvas canvas;
 
     void Start()
     {
-        mainCamera = Camera.main;
+        canvas = startPoint.GetComponentInParent<Canvas>(); // Haal de Canvas op (nodig voor conversie)
     }
 
     public bool IsMouseOverStartPoint()
     {
-        Vector3 mousePos = Input.mousePosition;
-        mousePos.z = 10f; // Afstand van de camera
-        Vector3 worldPos = mainCamera.ScreenToWorldPoint(mousePos);
+        Vector2 mousePos;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            canvas.transform as RectTransform,
+            Input.mousePosition,
+            canvas.worldCamera,
+            out mousePos
+        );
 
-        float distance = Vector3.Distance(worldPos, startPoint.position);
-        return distance <= 0.5f; // Pas deze straal aan indien nodig
+        // Controleer of de muis binnen de RectTransform valt
+        return RectTransformUtility.RectangleContainsScreenPoint(startPoint, Input.mousePosition, canvas.worldCamera);
     }
 }
-
