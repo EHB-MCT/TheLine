@@ -38,10 +38,12 @@ public class TimerScript : MonoBehaviour
     {
         if (Instance == this)  // Zorg ervoor dat we de timer alleen bijwerken als dit de actieve instantie is
         {
-            // Controleer of we op het main menu zijn en stop de timer als dat het geval is
-            if (SceneManager.GetActiveScene().name == "MainMenu") // MainMenu is de naam van je startscherm
+            string currentSceneName = SceneManager.GetActiveScene().name;
+
+            // Controleer of we op het main menu of de leaderboard scene zijn en stop de timer als dat het geval is
+            if (currentSceneName == "MainMenu" || currentSceneName == "Leaderboard") // MainMenu en Leaderboard zijn de namen van je schermen
             {
-                return; // Stop de timer wanneer we op het main menu zijn
+                return; // Stop de timer wanneer we op het main menu of leaderboard scherm zijn
             }
 
             // Als we in de game zijn, blijf de tijd bijhouden

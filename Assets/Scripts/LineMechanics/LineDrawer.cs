@@ -132,4 +132,13 @@ public void Update()
         }
         return vector2Array;
     }
+
+        void OnTriggerEnter2D(Collider2D other)
+    {
+        // Controleer of het object een "Image" tag heeft of een specifieke naam
+        if (other.CompareTag("Image"))
+        {
+            Debug.Log("Hit: " + other.name);
+        }
+    }
 }

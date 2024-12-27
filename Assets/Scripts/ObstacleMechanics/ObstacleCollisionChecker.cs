@@ -16,6 +16,18 @@ public class ObstacleCollisionChecker : MonoBehaviour
             Debug.Log("Obstacle geraakt!"); // Console-log wanneer een obstacle wordt geraakt
             HandleObstacleCollision();
         }
+
+            // Check of het object de tag "Image" heeft
+        if (other.CompareTag("Image"))
+        {
+            Debug.Log("Image geraakt! Het object wordt vernietigd.");
+            
+            // Trek 2 seconden af van de tijd
+            TimerScript.Instance.ReduceTime(2f); // Verminder de tijd met 2 seconden
+            
+            // Vernietig het object dat de tag "Image" heeft
+            Destroy(other.gameObject); // Vernietig het object
+        }
     }
 
     void HandleObstacleCollision()

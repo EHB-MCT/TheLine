@@ -312,6 +312,34 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &134159226 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1714064281696009173, guid: 943537f85527bbb498178ced600852e6, type: 3}
+  m_PrefabInstance: {fileID: 3861556524037837841}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &134159232 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2181438674141003059, guid: 943537f85527bbb498178ced600852e6, type: 3}
+  m_PrefabInstance: {fileID: 3861556524037837841}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 134159226}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b8bf587448088649a0911b726f24d60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &134159237
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 134159226}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24b893eb8f433164da3d89b814cd402a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &186882571
 GameObject:
   m_ObjectHideFlags: 0
@@ -725,6 +753,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 243d26fdce3fc65428edcc7ae9a3d726, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameUIManager: {fileID: 1848667890}
 --- !u!4 &501346835
 Transform:
   m_ObjectHideFlags: 0
@@ -1620,6 +1649,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameOverPanel: {fileID: 1184524809}
+  gameWonPanel: {fileID: 1184524809}
 --- !u!1 &1953714767
 GameObject:
   m_ObjectHideFlags: 0
@@ -1787,6 +1817,10 @@ PrefabInstance:
       propertyPath: startPoint
       value: 
       objectReference: {fileID: 659327614}
+    - target: {fileID: 3114969289648027389, guid: 943537f85527bbb498178ced600852e6, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3818167403893122575, guid: 943537f85527bbb498178ced600852e6, type: 3}
       propertyPath: endPoint
       value: 
@@ -1799,6 +1833,14 @@ PrefabInstance:
       propertyPath: startPoint
       value: 
       objectReference: {fileID: 659327614}
+    - target: {fileID: 5807349077354590076, guid: 943537f85527bbb498178ced600852e6, type: 3}
+      propertyPath: gameUIManager
+      value: 
+      objectReference: {fileID: 1848667890}
+    - target: {fileID: 6009847140517720576, guid: 943537f85527bbb498178ced600852e6, type: 3}
+      propertyPath: lineDrawer
+      value: 
+      objectReference: {fileID: 134159232}
     - target: {fileID: 6009847140517720576, guid: 943537f85527bbb498178ced600852e6, type: 3}
       propertyPath: gameUIManager
       value: 
@@ -1846,7 +1888,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1714064281696009173, guid: 943537f85527bbb498178ced600852e6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 134159237}
   m_SourcePrefab: {fileID: 100100000, guid: 943537f85527bbb498178ced600852e6, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
