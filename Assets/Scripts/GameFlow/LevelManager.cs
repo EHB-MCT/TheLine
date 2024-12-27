@@ -1,12 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine.SceneManagement;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
     // Singleton voor eenvoudige toegang vanuit andere scripts
     public static LevelManager Instance;
+
+    // Verwijzing naar GameUIManager
+    public GameUIManager gameUIManager;
 
     void Awake()
     {
@@ -34,10 +35,16 @@ public class LevelManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("No more levels! Returning to main menu or resetting.");
-            // Hier kun je een fallback activeren als er geen volgende scène is, bijvoorbeeld terug naar het hoofdmenu:
-            // SceneManager.LoadScene(0); // Laad scène met index 0 (bijv. hoofdmenu)
+            ShowNoMoreLevelsPopup();
+        }
+    }
+
+    // Toon de Game Over popup als er geen volgende scène is
+    private void ShowNoMoreLevelsPopup()
+    {
+        if (gameUIManager != null)
+        {
+            gameUIManager.ShowGameWonPopup(); // Roep de popup aan van GameUIManager
         }
     }
 }
-

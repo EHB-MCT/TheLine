@@ -7,12 +7,20 @@ public class LineSelfIntersectionChecker : MonoBehaviour
     private LineDrawer lineDrawer;
     private bool isIntersected = false;
 
+    // Verwijzing naar de GameUIManager
+    [SerializeField] private GameUIManager gameUIManager;
+
     void Start()
     {
         lineDrawer = GetComponent<LineDrawer>();
         if (lineDrawer == null)
         {
             Debug.LogError("LineDrawer component missing on this GameObject.");
+        }
+
+        if (gameUIManager == null)
+        {
+            Debug.LogError("GameUIManager is not assigned in the Inspector!");
         }
     }
 
@@ -25,9 +33,9 @@ public class LineSelfIntersectionChecker : MonoBehaviour
             if (CheckForSelfIntersection(points))
             {
                 Debug.Log("GAME LOST! Line self-intersected.");
-                lineDrawer.StopDrawing(); // Stop drawing immediately
-                isIntersected = true; // Mark the line as intersected
-                EndGame(); // Trigger end game logic
+                lineDrawer.StopDrawing();
+                isIntersected = true;
+                EndGame(); // Stop game when self-intersection is detected
             }
         }
     }
@@ -36,17 +44,16 @@ public class LineSelfIntersectionChecker : MonoBehaviour
     {
         if (points.Count < 2)
         {
-            return false; // Too few points to check
+            return false;
         }
 
         Vector3 lastPoint = points[points.Count - 1];
 
-        // Check if the last point intersects with any previous point
         for (int i = 0; i < points.Count - 1; i++)
         {
-            if (Vector3.Distance(lastPoint, points[i]) < 0.1f) // Tolerance of 0.1
+            if (Vector3.Distance(lastPoint, points[i]) < 0.1f)
             {
-                return true; // Intersection detected
+                return true;
             }
         }
 
@@ -55,25 +62,28 @@ public class LineSelfIntersectionChecker : MonoBehaviour
 
     public void ResetIntersection()
     {
-        isIntersected = false; // Allow drawing a new line again
+        isIntersected = false;
     }
 
     void EndGame()
     {
-        // Here you can add any game over logic, such as disabling further input
-        // and showing a game over UI or restarting the level.
         Debug.Log("GAME OVER - You lost!");
-        // Example: Load a Game Over scene (this requires scene management setup)
-        // SceneManager.LoadScene("GameOverScene");
+
+        // Roep de ShowGameOverPopup-methode van GameUIManager aan
+        if (gameUIManager != null)
+        {
+            gameUIManager.ShowGameOverPopup();
+            gameUIManager.StopGame();  // Stop de game door de tijd stil te zetten
+        }
     }
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Line")) // If the line intersects with itself
+        if (other.CompareTag("Line"))
         {
             Debug.Log("Lijn raakt zichzelf! GAME LOST.");
-            lineDrawer.StopDrawing(); // Stop drawing
-            EndGame(); // Trigger the game over logic
+            lineDrawer.StopDrawing();
+            EndGame(); // Stop game when self-intersection happens
         }
     }
 }

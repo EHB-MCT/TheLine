@@ -9,15 +9,15 @@ public class TimerScript : MonoBehaviour
     private float timeElapsed; // Houdt de verstreken tijd bij
     public Text timerText;     // Text UI element voor het weergeven van de timer
 
-    // Singleton pattern
-    private static TimerScript instance;
+    // Singleton patroon
+    public static TimerScript Instance { get; private set; }
 
     void Awake()
     {
         // Zorg ervoor dat er maar één instantie van de TimerScript is
-        if (instance == null)
+        if (Instance == null)
         {
-            instance = this;
+            Instance = this;
             DontDestroyOnLoad(gameObject); // Zorg ervoor dat dit object niet vernietigd wordt bij scenewissel
         }
         else
@@ -28,7 +28,7 @@ public class TimerScript : MonoBehaviour
 
     void Start()
     {
-        if (instance == this)  // Start de timer alleen als dit de actieve instantie is
+        if (Instance == this)  // Start de timer alleen als dit de actieve instantie is
         {
             timeElapsed = 0f;  // Initialiseer de timer op 0 bij het starten van de game
         }
@@ -36,8 +36,15 @@ public class TimerScript : MonoBehaviour
 
     void Update()
     {
-        if (instance == this)  // Zorg ervoor dat we de timer alleen bijwerken als dit de actieve instantie is
+        if (Instance == this)  // Zorg ervoor dat we de timer alleen bijwerken als dit de actieve instantie is
         {
+            // Controleer of we op het main menu zijn en stop de timer als dat het geval is
+            if (SceneManager.GetActiveScene().name == "MainMenu") // MainMenu is de naam van je startscherm
+            {
+                return; // Stop de timer wanneer we op het main menu zijn
+            }
+
+            // Als we in de game zijn, blijf de tijd bijhouden
             timeElapsed += Time.deltaTime; // Verhoog de tijd met de verstreken tijd per frame
 
             // Bereken minuten, seconden en milliseconden
@@ -47,6 +54,22 @@ public class TimerScript : MonoBehaviour
 
             // Update de UI text met de nieuwe tijd
             timerText.text = string.Format("{0:D2}:{1:D2}:{2:D3}", minutes, seconds, milliseconds);
+        }
+    }
+
+    // Voeg deze methode toe om de timer opnieuw in te stellen naar 0
+    public void ResetTimer()
+    {
+        timeElapsed = 0f; // Zet de tijd weer op 0
+        timerText.text = "00:00:000"; // Zet de timer UI ook naar 0
+    }
+
+    public void ReduceTime(float amount)
+    {
+        timeElapsed -= amount; // Trek de opgegeven hoeveelheid tijd af
+        if (timeElapsed < 0f)
+        {
+            timeElapsed = 0f; // Zorg ervoor dat de timer niet negatief gaat
         }
     }
 }

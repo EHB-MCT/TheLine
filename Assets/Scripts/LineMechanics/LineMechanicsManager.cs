@@ -14,6 +14,9 @@ public class LineMechanicsManager : MonoBehaviour
     private bool isDrawing;
     private Camera mainCamera;
 
+    // Voeg een referentie toe naar GameUIManager
+    public GameUIManager gameUIManager;
+
     void Start()
     {
         mainCamera = Camera.main;
@@ -27,6 +30,9 @@ public class LineMechanicsManager : MonoBehaviour
 
     void Update()
     {
+        if (Time.timeScale == 0f) // Stopte tekenen als tijd gepauzeerd is
+            return;
+
         if (Input.GetMouseButtonDown(0))
         {
             if (startPointHandler.IsMouseOverStartPoint())
@@ -39,7 +45,7 @@ public class LineMechanicsManager : MonoBehaviour
         if (Input.GetMouseButton(0) && isDrawing)
         {
             Vector3 mousePos = Input.mousePosition;
-            mousePos.z = 2f;
+            mousePos.z = 2f; // Zorg dat de z-waarde juist is voor je 2D lijn
             Vector3 worldPos = mainCamera.ScreenToWorldPoint(mousePos);
             lineDrawer.UpdateLine(worldPos);
         }
@@ -52,6 +58,12 @@ public class LineMechanicsManager : MonoBehaviour
         if (isDrawing && endPointHandler.IsLineTouchingEndPoint(lineDrawer.GetPoints()))
         {
             Debug.Log("GAME WON");
+
+            // Toon de Game Won popup
+            if (gameUIManager != null)
+            {
+                gameUIManager.ShowGameWonPopup(); // Roep de popup aan van GameUIManager
+            }
 
             // Roep de LevelManager aan om naar het volgende level te gaan
             LevelManager.Instance.LoadNextScene();

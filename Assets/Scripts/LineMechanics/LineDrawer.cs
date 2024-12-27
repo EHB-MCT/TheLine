@@ -5,7 +5,7 @@ using UnityEngine;
 public class LineDrawer : MonoBehaviour
 {
     private LineRenderer lineRenderer;
-    private EdgeCollider2D edgeCollider; // EdgeCollider voor detectie
+    private EdgeCollider2D edgeCollider;
     private List<Vector3> points;
     private bool isDrawing = false;
     private bool isLineStarted = false;
@@ -25,7 +25,6 @@ public class LineDrawer : MonoBehaviour
 
         points = new List<Vector3>();
 
-        // Configureer de LineRenderer
         lineRenderer.positionCount = 0;
         lineRenderer.startWidth = 0.1f;
         lineRenderer.endWidth = 0.1f;
@@ -34,36 +33,38 @@ public class LineDrawer : MonoBehaviour
         edgeCollider.isTrigger = true; // Zorg dat de collider een trigger is
     }
 
-    public void Update()
+public void Update()
+{
+    if (Time.timeScale == 0f || !isDrawing) // Stopte tekenen als tijd gepauzeerd is of als je niet aan het tekenen bent
+        return;
+
+    if (Input.GetMouseButtonDown(0) && !isDrawing && IsMouseOverStartPoint())
     {
-        if (Input.GetMouseButtonDown(0) && !isDrawing && IsMouseOverStartPoint())
-        {
-            StartDrawing(Vector3.zero); // Begin op het startpunt
-            intersectionChecker.ResetIntersection(); // Reset de intersectiestatus
-        }
+        StartDrawing(Vector3.zero); // Begin op het startpunt
+        intersectionChecker.ResetIntersection(); // Reset de intersectiestatus
+    }
 
-        if (Input.GetMouseButton(0) && isDrawing)
-        {
-            Vector3 mousePos = Input.mousePosition;
-            mousePos.z = 2f; // Afstand van de camera
-            Vector3 worldPos = Camera.main.ScreenToWorldPoint(mousePos);
-            UpdateLine(worldPos);
-        }
+    if (Input.GetMouseButton(0) && isDrawing)
+    {
+        Vector3 mousePos = Input.mousePosition;
+        mousePos.z = 2f; // Afstand van de camera
+        Vector3 worldPos = Camera.main.ScreenToWorldPoint(mousePos);
+        UpdateLine(worldPos);
+    }
 
-        if (Input.GetMouseButtonUp(0))
+    if (Input.GetMouseButtonUp(0))
+    {
+        if (isDrawing)
         {
-            if (isDrawing)
+            // Stop met tekenen als er een intersectie is
+            if (intersectionChecker.CheckForSelfIntersection(points))
             {
-                // Stop met tekenen als er een intersectie is
-                if (intersectionChecker.CheckForSelfIntersection(points))
-                {
-                    Debug.Log("Line intersected, clearing line.");
-                    StopDrawing(); // Stop drawing when the line intersects itself
-                    // Don't allow further drawing until the mouse is released and the player returns to start point
-                }
+                Debug.Log("Line intersected, clearing line.");
+                StopDrawing(); // Stop drawing when the line intersects itself
             }
         }
     }
+}
 
     private bool IsMouseOverStartPoint()
     {
