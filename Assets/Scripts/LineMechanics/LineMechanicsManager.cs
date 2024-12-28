@@ -14,9 +14,6 @@ public class LineMechanicsManager : MonoBehaviour
     private bool isDrawing;
     private Camera mainCamera;
 
-    // Voeg een referentie toe naar GameUIManager
-    public GameUIManager gameUIManager;
-
     void Start()
     {
         mainCamera = Camera.main;
@@ -57,16 +54,8 @@ public class LineMechanicsManager : MonoBehaviour
 
         if (isDrawing && endPointHandler.IsLineTouchingEndPoint(lineDrawer.GetPoints()))
         {
-            Debug.Log("GAME WON");
-
-            // Toon de Game Won popup
-            if (gameUIManager != null)
-            {
-                gameUIManager.ShowGameWonPopup(); // Roep de popup aan van GameUIManager
-            }
-
-            // Roep de LevelManager aan om naar het volgende level te gaan
-            LevelManager.Instance.LoadNextScene();
+            // Gebruik LoadNextScene.Instance om naar de volgende scène te gaan
+            LoadNextScene.Instance.LoadNextSceneProcess();
 
             isDrawing = false;
         }

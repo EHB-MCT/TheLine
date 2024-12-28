@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ObstacleCollisionChecker : MonoBehaviour
 {
-    [SerializeField] private GameUIManager gameUIManager; // Verwijzing naar de GameUIManager
+    [SerializeField] private StopGame stopGame; // Verwijzing naar StopGame
     [SerializeField] private LineDrawer lineDrawer; // Verwijzing naar de LineDrawer
 
     void OnTriggerEnter2D(Collider2D other)
@@ -17,7 +17,7 @@ public class ObstacleCollisionChecker : MonoBehaviour
             HandleObstacleCollision();
         }
 
-            // Check of het object de tag "Image" heeft
+        // Check of het object de tag "Image" heeft
         if (other.CompareTag("Image"))
         {
             Debug.Log("Image geraakt! Het object wordt vernietigd.");
@@ -34,17 +34,16 @@ public class ObstacleCollisionChecker : MonoBehaviour
     {
         Debug.Log("GAME OVER - Je hebt een obstacle geraakt.");
 
-        // Roep de Game Over UI aan via GameUIManager
-        if (gameUIManager != null)
+        // Roep de StopGame methode aan om de game te stoppen
+        if (stopGame != null)
         {
-            gameUIManager.ShowGameOverPopup();
-            gameUIManager.StopGame(); // Stop de game
+            stopGame.StopGameProcess(); // Roep de StopGameProcess aan om het spel te stoppen
         }
 
         // Stop het tekenen van de lijn
         if (lineDrawer != null)
         {
-            lineDrawer.StopDrawing(); // Stop drawing the line
+            lineDrawer.StopDrawing(); // Stop het tekenen van de lijn
         }
     }
 }

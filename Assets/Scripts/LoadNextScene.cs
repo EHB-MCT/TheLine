@@ -1,17 +1,14 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class LevelManager : MonoBehaviour
+public class LoadNextScene : MonoBehaviour
 {
     // Singleton voor eenvoudige toegang vanuit andere scripts
-    public static LevelManager Instance;
-
-    // Verwijzing naar GameUIManager
-    public GameUIManager gameUIManager;
+    public static LoadNextScene Instance;
 
     void Awake()
     {
-        // Zorg ervoor dat er maar één LevelManager is en maak hem toegankelijk via de singleton
+        // Zorg ervoor dat er maar één LoadNextScene is en maak hem toegankelijk via de singleton
         if (Instance == null)
         {
             Instance = this;
@@ -23,7 +20,7 @@ public class LevelManager : MonoBehaviour
     }
 
     // Methode om de volgende scène te laden
-    public void LoadNextScene()
+    public void LoadNextSceneProcess()
     {
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
         int nextSceneIndex = currentSceneIndex + 1;
@@ -35,16 +32,7 @@ public class LevelManager : MonoBehaviour
         }
         else
         {
-            ShowNoMoreLevelsPopup();
-        }
-    }
-
-    // Toon de Game Over popup als er geen volgende scène is
-    private void ShowNoMoreLevelsPopup()
-    {
-        if (gameUIManager != null)
-        {
-            gameUIManager.ShowGameWonPopup(); // Roep de popup aan van GameUIManager
+            LevelCheck.Instance.CheckForMoreLevels();  // Roep de LevelCheck aan om te controleren of er nog levels zijn
         }
     }
 }

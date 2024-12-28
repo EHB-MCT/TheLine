@@ -7,8 +7,7 @@ public class LineSelfIntersectionChecker : MonoBehaviour
     private LineDrawer lineDrawer;
     private bool isIntersected = false;
 
-    // Verwijzing naar de GameUIManager
-    [SerializeField] private GameUIManager gameUIManager;
+    [SerializeField] private StopGame stopGame; // Verwijzing naar het StopGame-script
 
     void Start()
     {
@@ -18,13 +17,13 @@ public class LineSelfIntersectionChecker : MonoBehaviour
             Debug.LogError("LineDrawer component missing on this GameObject.");
         }
 
-        if (gameUIManager == null)
+        if (stopGame == null)
         {
-            Debug.LogError("GameUIManager is not assigned in the Inspector!");
+            Debug.LogError("StopGame script is not assigned in the Inspector!");
         }
     }
 
-    public void Update()
+    void Update()
     {
         if (lineDrawer != null && !isIntersected)
         {
@@ -69,11 +68,10 @@ public class LineSelfIntersectionChecker : MonoBehaviour
     {
         Debug.Log("GAME OVER - You lost!");
 
-        // Roep de ShowGameOverPopup-methode van GameUIManager aan
-        if (gameUIManager != null)
+        // Roep de methode aan om de game te stoppen
+        if (stopGame != null)
         {
-            gameUIManager.ShowGameOverPopup();
-            gameUIManager.StopGame();  // Stop de game door de tijd stil te zetten
+            stopGame.StopGameProcess(); // Stop de game door de tijd stil te zetten
         }
     }
 
