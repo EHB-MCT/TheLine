@@ -1,6 +1,6 @@
 # The Line - Unity Project
 
-**The Line** is a challenging and engaging single-player game where players must draw a line to navigate from point A to point B without touching their own line or any obstacles. Compete for the top spot on the leaderboard and remember—time is of the essence!
+**The Line** is a challenging and engaging single-player game where players must draw a line to navigate from point A to point B without touching their own line or any obstacles. Compete for the top spot on the leaderboard and remember time is of the essence!
 
 ---
 
@@ -83,6 +83,7 @@ Before starting, ensure you have the following installed:
 
 ## How to Contribute
 - Fork this repository and submit a pull request with your changes.
+- see the [CONTRIBUTING.md](CONTRIBUTING.md) file for details.
 
 ## Known Issues
 - Some issues with line redrawing from the StartPoint.
@@ -93,4 +94,63 @@ This project is licensed under the Apache License - see the [LICENSE.md](LICENSE
 
 ## Attribution
 
-Special thanks to .
+**Erasmus Hogeschool Brussel & Jan Everaert**
+- A sincere thank you for providing the opportunity to work on this project.
+- Thank you for offering valuable advice and helping me overcome challenges.
+
+**Friends & Family**
+- Many thanks for testing the game and providing valuable user feedback.
+
+**Special thanks to Kozmobot Games for providing a youtube tutorial**
+
+- How to Make a TIMER Between Scenes in UNITY
+- Watch on YouTube: https://www.youtube.com/watch?v=GNnG13nv-Sc&t=172s
+
+**Special thanks to RobertBrooks for providing sprites**
+
+- Implementing obstacles as sprites
+- View Asset Pack: https://www.construct.net/en/game-assets/graphics/asset-packs/2d-top-down-floor-spikes-4060
+
+**Special thanks to ChatGPT for support on various parts of the project**
+
+- Implementing Basic Line Drawing Functionality  
+  https://chatgpt.com/c/6752c967-8378-8003-a5f2-b68fd6786160
+
+- Overview of Git Branching  
+  https://chatgpt.com/c/6752b2b7-b1a8-8003-9bbe-fd6f92327cc8
+
+- Writing Clear and Effective Commit Messages  
+  https://chatgpt.com/c/67404ab9-97a4-8003-b321-d76805c5c309
+
+- Configuring and Understanding Git Remotes  
+  https://chatgpt.com/c/67122e10-9ab4-8003-891c-40ba974c6a7e
+
+- Enhancing Line Drawing with Advanced Features  
+  https://chatgpt.com/c/6769707a-68dc-8003-8c85-61c02148beea
+
+- Implementing Level Transitions and Scene Management  
+  https://chatgpt.com/c/6769779c-4700-8003-a996-2b99acf70fc2
+
+- Transitioning to the Next Level After Completion  
+  https://chatgpt.com/c/6769980e-5364-8003-99a6-6769b0a9b19d
+
+- Creating and Managing a Game Timer  
+  https://chatgpt.com/c/676d951c-59a4-8003-8d3e-ac110fc89c0c
+
+- Handling Obstacle Collisions  
+  https://chatgpt.com/c/676dcbb2-7604-8003-89bf-024142750950
+
+- Game Over Logic and Implementation  
+  https://chatgpt.com/c/676ed908-46b8-8003-bc54-53d015baa84f
+
+- Logic for Winning the Game  
+  https://chatgpt.com/c/676f1b47-406c-8003-97ff-92b48308e117
+
+- Adding Final Touches to Line Drawing Functionality  
+  https://chatgpt.com/c/676f3145-fc48-8003-923d-5db88b250c7e
+
+- Refactoring Code for Improved Readability and Performance  
+  https://chatgpt.com/c/67700304-f034-8003-951a-8a33680cb518
+
+- Organizing and Optimizing Directory Structure  
+  https://chatgpt.com/c/67714998-b8ec-8003-b973-3eb1a47cbea3
