@@ -1,33 +1,37 @@
 # Contributing to TheLine
 
-We’re excited that you’re interested in contributing to TheLine! This document will help guide you through the process of contributing to our project. Whether you’re a developer, artist, designer, or just someone who wants to help, we welcome your input!
+We are thrilled that you're interested in contributing to **TheLine**! This guide will help you get started with the contribution process. Whether you are a developer, designer, artist, or simply someone eager to help, your contributions are valuable to us. 
 
 ## How to Contribute
 
 ### Reporting Issues
 
-If you find a bug or have a feature request, please open an issue in our [GitHub repository](link-to-your-repo/issues). Provide as much detail as possible, including:
+If you encounter a bug or have a feature request, please open an issue on our [GitHub repository](https://github.com/EHB-MCT/TheLine.git). When reporting an issue, make sure to include the following details:
 
-- Steps to reproduce the bug
-- What you expected to happen
-- What actually happened
-- Screenshots or logs if applicable
+- Steps to reproduce the bug or the problem.
+- What you expected to happen.
+- What actually happened.
+- Screenshots or logs (if applicable).
+- Your environment (e.g., OS, browser, Unity version, etc.).
 
 ### Suggesting Features
 
-If you have an idea for a new feature or improvement, please let us know! Open a new issue and describe your idea, including:
+If you have an idea for a new feature or an improvement, we’d love to hear it! To suggest a feature:
 
-- The purpose of the feature
-- How it could benefit players
-- Any specific implementation details or suggestions
+1. Open a new issue in the repository.
+2. Describe your idea in detail, including:
+   - The purpose and goal of the feature.
+   - How it will benefit users or players.
+   - Any specific implementation details or suggestions you have.
 
 ### Code Contributions
 
-If you want to contribute code, please follow these steps:
+We welcome contributions in the form of code improvements, bug fixes, and new features. If you'd like to contribute code, please follow these steps:
 
-1. **Fork the Repository:** Click the “Fork” button on our GitHub repository to create a personal copy.
-2. **Create a New Branch:** Make sure to create a new branch for your feature or bug fix:
+1. **Fork the Repository:**
+   Click the “Fork” button in the top-right corner of our GitHub repository to create a personal copy of the repository.
+
+2. **Clone the Forked Repository:**
+   Clone your fork to your local machine:
    ```bash
-   git checkout -b my-feature-branch
-
-Please make sure to follow the [Code of Conduct](CODE_OF_CONDUCT.md).
+   git clone https://github.com/EHB-MCT/TheLine.git
