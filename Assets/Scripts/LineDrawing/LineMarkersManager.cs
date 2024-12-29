@@ -8,7 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LineMechanicsManager : MonoBehaviour
+public class LineMarkersManager : MonoBehaviour
 {
     public RectTransform startPoint;  // The start point of the drawing
     public RectTransform endPoint;    // The end point of the drawing
