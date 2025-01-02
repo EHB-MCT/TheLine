@@ -6,36 +6,38 @@ using System.Security.Cryptography; // For password hashing
 using System.Text; // To convert strings into bytes
 using System.IO; // To work with file paths
 using Newtonsoft.Json; // For deserializing the JSON configuration
+using System;
 
 public class SignIn : MonoBehaviour
 {
-    public InputField playerNameInputField; // Reference to the player name input field
-    public InputField passwordInputField; // Reference to the password input field
-    public Button signInButton; // Reference to the sign in button
-    public Text errorMessageText; // Reference to display error messages (Optional)
+    public InputField playerNameInputField; 
+    public InputField passwordInputField; 
+    public Button signInButton;
+    public Text errorMessageText;
 
     private MongoClient client;
     private IMongoDatabase database;
     private string connectionString;
 
+    public static bool isLoggedIn = false;
+    public static string playerName;
+
     void Start()
     {
-        // Load the configuration and set up the MongoDB client and database connection
         LoadConfiguration();
         client = new MongoClient(connectionString);
         database = client.GetDatabase("TheLine");
 
-        // Add listener for the Sign In button
         signInButton.onClick.AddListener(OnSignInClicked);
     }
 
-    // Method to be called when the Sign In button is clicked
     private void OnSignInClicked()
     {
         string playerName = playerNameInputField.text;
         string password = passwordInputField.text;
 
-        // Check if the player exists in the database
+        SignIn.playerName = playerName; // Store the player name in the static variable
+
         var player = GetPlayerByName(playerName);
 
         if (player == null)
@@ -44,16 +46,13 @@ public class SignIn : MonoBehaviour
             return;
         }
 
-        // Get the hashed password from the database
         string storedHashedPassword = player["password"].AsString;
-
-        // Hash the input password and compare with the stored hash
         string hashedPassword = HashPassword(password);
 
         if (hashedPassword == storedHashedPassword)
         {
             Debug.Log("Login successful!");
-            // Proceed to the next screen or game logic
+            isLoggedIn = true;
         }
         else
         {
@@ -61,17 +60,15 @@ public class SignIn : MonoBehaviour
         }
     }
 
-    // Hash the password using SHA-256 for security
     private string HashPassword(string password)
     {
         using (SHA256 sha256 = SHA256.Create())
         {
             byte[] hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
-            return System.BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
+            return BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
         }
     }
 
-    // Retrieve player data from the database based on player name
     private BsonDocument GetPlayerByName(string playerName)
     {
         var collection = database.GetCollection<BsonDocument>("Players");
@@ -79,7 +76,6 @@ public class SignIn : MonoBehaviour
         return collection.Find(filter).FirstOrDefault();
     }
 
-    // Show an error message (optional: you can link this to a UI Text field)
     private void ShowErrorMessage(string message)
     {
         if (errorMessageText != null)
@@ -92,7 +88,6 @@ public class SignIn : MonoBehaviour
         }
     }
 
-    // Method to load the configuration file and set the connection string
     private void LoadConfiguration()
     {
         string configFilePath = Path.Combine(Application.streamingAssetsPath, "config.json");
@@ -102,7 +97,6 @@ public class SignIn : MonoBehaviour
             string json = File.ReadAllText(configFilePath);
             Config config = JsonConvert.DeserializeObject<Config>(json);
 
-            // Set the connection string from the config
             connectionString = config.mongoConnectionString;
 
             if (string.IsNullOrEmpty(connectionString))

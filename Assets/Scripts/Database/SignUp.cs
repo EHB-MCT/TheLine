@@ -64,7 +64,7 @@ public class SignUp : MonoBehaviour
         using (SHA256 sha256 = SHA256.Create())
         {
             byte[] hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
-            return System.BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
+            return BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
         }
     }
 
