@@ -44,10 +44,7 @@ public class LineSelfIntersectionChecker : MonoBehaviour
                 isIntersected = true;
 
                 // Stop the game using the StopGame script.
-                if (stopGame != null)
-                {
-                    stopGame.StopGameProcess(lineDrawer);
-                }
+                stopGame?.StopGameProcess(lineDrawer);
             }
         }
     }

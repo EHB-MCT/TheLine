@@ -272,6 +272,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stopGame: {fileID: 7375758271428854901, guid: 79bd9483c6de1804d9c9a04b6bf8898f, type: 3}
+  gameManager: {fileID: -5467537857373114165, guid: 79bd9483c6de1804d9c9a04b6bf8898f, type: 3}
 --- !u!114 &6009847140517720576
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -284,8 +285,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf605f1f0fab52142a85b6a8980625da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stopGame: {fileID: 7375758271428854901, guid: 79bd9483c6de1804d9c9a04b6bf8898f, type: 3}
   lineDrawer: {fileID: 2181438674141003059}
+  stopGame: {fileID: 7375758271428854901, guid: 79bd9483c6de1804d9c9a04b6bf8898f, type: 3}
 --- !u!114 &2514882395025622758
 MonoBehaviour:
   m_ObjectHideFlags: 0
