@@ -1,26 +1,29 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
 public class APIClient : MonoBehaviour
 {
-    private const string BASE_URL = "http://localhost:5000/api/players";
+    private const string BASE_URL = "http://localhost:5033/api/test"; // Update URL naar jouw testendpoint
 
-    public IEnumerator GetPlayers()
+    public IEnumerator TestAPI()
     {
         UnityWebRequest request = UnityWebRequest.Get(BASE_URL);
         yield return request.SendWebRequest();
 
         if (request.result == UnityWebRequest.Result.Success)
         {
-            Debug.Log(request.downloadHandler.text);
-            // Parse de JSON hier als nodig
+            Debug.Log($"Response from API: {request.downloadHandler.text}");
         }
         else
         {
-            Debug.LogError(request.error);
+            Debug.LogError($"Error: {request.error}");
         }
     }
-}
 
+    private void Start()
+    {
+        // Start de test wanneer het script begint
+        StartCoroutine(TestAPI());
+    }
+}

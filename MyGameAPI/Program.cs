@@ -1,11 +1,18 @@
-using MyGameAPI.Services; // Zorg ervoor dat je de juiste namespace gebruikt voor MongoDbService
+using MongoDB.Driver;
+using Microsoft.AspNetCore.Mvc;
+using MyGameAPI.Services; // Ensure you're using the correct namespace for MongoDbService
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Voeg services toe aan de container
+// Add services to the container
+builder.Services.AddControllers(); // Add support for controllers
 builder.Services.AddSingleton<MongoDbService>();
 
-// Voeg CORS toe als je Unity toegang wil geven tot de API vanaf een andere origin
+// Add CORS to allow Unity to access the API from a different origin
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
@@ -16,18 +23,21 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Configureer de HTTP request pipeline
+// Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
 }
 
-// Stel CORS in (gebruik de gedefinieerde policy)
+// Set up CORS (using the defined policy)
 app.UseCors("AllowAll");
 
 app.UseHttpsRedirection();
 app.UseAuthorization();
 
-app.MapControllers(); // Zorg dat je controllers gemapt worden als je ze gebruikt
+// Map controllers (make sure controllers are used)
+app.MapControllers();
+
+app.MapGet("/", () => "API is running!");
 
 app.Run();
