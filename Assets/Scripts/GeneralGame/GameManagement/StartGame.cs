@@ -1,5 +1,8 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using MongoDB.Driver;
+using System.IO; // Voor Path en File
+using Newtonsoft.Json; // Voor JsonConvert
 
 public class StartGame : MonoBehaviour
 {
