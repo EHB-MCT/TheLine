@@ -1,9 +1,3 @@
-/*
- * This script loads the next scene in the game.
- * If there are no more scenes, it checks for more levels using the LevelCheck singleton.
- * It uses a singleton pattern for easy access from other scripts.
- */
-
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -25,20 +19,28 @@ public class LoadNextScene : MonoBehaviour
         }
     }
 
-    // Method to load the next scene
     public void LoadNextSceneProcess()
     {
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
         int nextSceneIndex = currentSceneIndex + 1;
 
-        // Check if the next scene exists in the Build Settings
+        // Log het huidige level
+        Debug.Log("Current Level: " + currentSceneIndex);
+
+        // Controleer en update hoogste level in PlayerManager
+        PlayerManager.Instance.UpdateHighestLevel(currentSceneIndex);
+
+        // Check of het volgende level beschikbaar is
         if (nextSceneIndex < SceneManager.sceneCountInBuildSettings)
         {
-            SceneManager.LoadScene(nextSceneIndex); // Load the next scene
+            Debug.Log("Loading Next Level: " + nextSceneIndex);
+            SceneManager.LoadScene(nextSceneIndex); // Laad het volgende level
         }
         else
         {
-            LevelCheck.Instance.CheckForMoreLevels();  // Call LevelCheck to see if more levels exist
+            Debug.Log("No more levels in Build Settings. Checking for additional levels...");
+            LevelCheck.Instance.CheckForMoreLevels();
         }
     }
+
 }
