@@ -58,8 +58,22 @@ public class Login : MonoBehaviour
             if (request.result == UnityWebRequest.Result.Success)
             {
                 feedbackText.text = "Login successful!";
-                LastFeedbackMessage = feedbackText.text; // Update de persistente feedbacktekst
-                Debug.Log("Response: " + request.downloadHandler.text);
+                LastFeedbackMessage = feedbackText.text;
+
+                // Parse de respons
+                try
+                {
+                    PlayerLoginResponse response = JsonUtility.FromJson<PlayerLoginResponse>(request.downloadHandler.text);
+                    Debug.Log("Highest Level Reached: " + response.highestLevelReached);
+
+                    // Stel gegevens in via PlayerManager
+                    PlayerManager.Instance.SetPlayerData(response.playerId, response.highestLevelReached);
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogError("Failed to parse response: " + ex.Message);
+                }
+
                 IsLoggedIn = true; // Markeer als ingelogd
             }
             else
@@ -69,6 +83,14 @@ public class Login : MonoBehaviour
                 Debug.LogError("Error: " + request.error);
             }
         }
+    }
+
+    [System.Serializable]
+    public class PlayerLoginResponse
+    {
+        public string message;
+        public string playerId;
+        public int highestLevelReached;
     }
 
     [System.Serializable]

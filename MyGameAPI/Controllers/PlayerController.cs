@@ -54,6 +54,44 @@ public class PlayerController : ControllerBase
             return Unauthorized(new { message = "Invalid username or password" });
         }
 
-        return Ok(new { message = "Login successful!", playerId = player.Id });
+        // Voeg HighestLevelReached toe aan de respons
+        return Ok(new 
+        { 
+            message = "Login successful!", 
+            playerId = player.Id, 
+            highestLevelReached = player.HighestLevelReached 
+        });
+    }
+
+    [HttpPost("update-highest-level")]
+    public async Task<IActionResult> UpdateHighestLevel([FromBody] UpdateLevelRequest request)
+    {
+        if (string.IsNullOrEmpty(request.PlayerId) || request.NewLevel <= 0)
+        {
+            return BadRequest(new { message = "Invalid data provided" });
+        }
+
+        var playersCollection = _mongoDbService.Database.GetCollection<Player>("Players");
+        var player = await playersCollection.Find(p => p.Id == request.PlayerId).FirstOrDefaultAsync();
+
+        if (player == null)
+        {
+            return NotFound(new { message = "Player not found" });
+        }
+
+        if (request.NewLevel > player.HighestLevelReached)
+        {
+            var update = Builders<Player>.Update.Set(p => p.HighestLevelReached, request.NewLevel);
+            await playersCollection.UpdateOneAsync(p => p.Id == request.PlayerId, update);
+            return Ok(new { message = "Highest level updated successfully!" });
+        }
+
+        return Ok(new { message = "No update needed; level not higher than current highest." });
+    }
+
+    public class UpdateLevelRequest
+    {
+        public string PlayerId { get; set; }
+        public int NewLevel { get; set; }
     }
 }
