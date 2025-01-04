@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using MyGameAPI.Services;
-using System.Threading.Tasks;
 using MyGameAPI.Models;
+using System.Threading.Tasks;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -24,6 +24,7 @@ public class PlayerController : ControllerBase
         }
 
         var playersCollection = _mongoDbService.Database.GetCollection<Player>("Players");
+        var playerStatsCollection = _mongoDbService.Database.GetCollection<PlayerStats>("PlayerStats");
         var existingPlayer = await playersCollection.Find(p => p.Username == player.Username).FirstOrDefaultAsync();
 
         if (existingPlayer != null)
@@ -31,10 +32,26 @@ public class PlayerController : ControllerBase
             return Conflict(new { message = "Username already exists" });
         }
 
+        // Genereer een unieke ID als deze nog niet is ingesteld
+        if (string.IsNullOrEmpty(player.Id))
+        {
+            player.Id = MongoDB.Bson.ObjectId.GenerateNewId().ToString(); // Of gebruik Guid.NewGuid().ToString();
+        }
+
         // Hash het wachtwoord
         player.Password = BCrypt.Net.BCrypt.HashPassword(player.Password);
 
         await playersCollection.InsertOneAsync(player);
+
+        // Voeg een nieuw record toe in PlayerStats
+        var playerStats = new PlayerStats
+        {
+            PlayerId = player.Id,
+            HighestLevelReached = 0
+        };
+
+        await playerStatsCollection.InsertOneAsync(playerStats);
+
         return Ok(new { message = "Player signed up successfully!", playerId = player.Id });
     }
 
@@ -54,44 +71,6 @@ public class PlayerController : ControllerBase
             return Unauthorized(new { message = "Invalid username or password" });
         }
 
-        // Voeg HighestLevelReached toe aan de respons
-        return Ok(new 
-        { 
-            message = "Login successful!", 
-            playerId = player.Id, 
-            highestLevelReached = player.HighestLevelReached 
-        });
-    }
-
-    [HttpPost("update-highest-level")]
-    public async Task<IActionResult> UpdateHighestLevel([FromBody] UpdateLevelRequest request)
-    {
-        if (string.IsNullOrEmpty(request.PlayerId) || request.NewLevel <= 0)
-        {
-            return BadRequest(new { message = "Invalid data provided" });
-        }
-
-        var playersCollection = _mongoDbService.Database.GetCollection<Player>("Players");
-        var player = await playersCollection.Find(p => p.Id == request.PlayerId).FirstOrDefaultAsync();
-
-        if (player == null)
-        {
-            return NotFound(new { message = "Player not found" });
-        }
-
-        if (request.NewLevel > player.HighestLevelReached)
-        {
-            var update = Builders<Player>.Update.Set(p => p.HighestLevelReached, request.NewLevel);
-            await playersCollection.UpdateOneAsync(p => p.Id == request.PlayerId, update);
-            return Ok(new { message = "Highest level updated successfully!" });
-        }
-
-        return Ok(new { message = "No update needed; level not higher than current highest." });
-    }
-
-    public class UpdateLevelRequest
-    {
-        public string PlayerId { get; set; }
-        public int NewLevel { get; set; }
+        return Ok(new { message = "Login successful!", playerId = player.Id });
     }
 }

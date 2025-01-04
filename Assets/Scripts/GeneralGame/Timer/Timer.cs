@@ -79,4 +79,10 @@ public class Timer : MonoBehaviour
             timeElapsed = 0f;  // Ensure the timer doesn't go negative
         }
     }
+
+    // Method to get the elapsed time
+    public float GetElapsedTime()
+    {
+        return timeElapsed;  // Return the elapsed time
+    }
 }

@@ -24,11 +24,16 @@ public class LoadNextScene : MonoBehaviour
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
         int nextSceneIndex = currentSceneIndex + 1;
 
-        // Log het huidige level
+        // Log het huidige level en tijd
         Debug.Log("Current Level: " + currentSceneIndex);
+        float elapsedTime = Timer.Instance.GetElapsedTime();
+        Debug.Log($"Time elapsed for level {currentSceneIndex}: {elapsedTime:F2} seconds");
 
-        // Controleer en update hoogste level in PlayerManager
-        PlayerManager.Instance.UpdateHighestLevel(currentSceneIndex);
+        // Controleer en update hoogste level en sla tijd op in PlayerManager
+        PlayerManager.Instance.UpdateHighestLevel(currentSceneIndex, elapsedTime);
+
+        // Reset de timer voor het volgende level
+        Timer.Instance.ResetTimer();
 
         // Check of het volgende level beschikbaar is
         if (nextSceneIndex < SceneManager.sceneCountInBuildSettings)

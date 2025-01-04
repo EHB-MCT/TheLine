@@ -11,8 +11,5 @@ namespace MyGameAPI.Models
 
         public string Username { get; set; }
         public string Password { get; set; }
-
-        // Nieuw veld
-        public int HighestLevelReached { get; set; } = 0; // Default is level 0
     }
 }
