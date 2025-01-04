@@ -44,3 +44,9 @@ UserSettings/
 .DS_Store
 Thumbs.db
 Desktop.ini
+
+# Negeer het config bestand
+config.json
+
+# Negeer alle .env bestanden
+*.env

@@ -10,7 +10,7 @@ EditorBuildSettings:
     guid: 8c9cfa26abfee488c85f1582747f6a02
   - enabled: 1
     path: Assets/Scenes/Menus/Leaderboard.unity
-    guid: f42fbd56134febf4ea8de20fd93ca23c
+    guid: e7961c9ad0896c846b9d93703c57a327
   - enabled: 1
     path: Assets/Scenes/Levels/Level 001.unity
     guid: 72554f2ae199f4243a6ef5b3fa878438
