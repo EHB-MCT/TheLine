@@ -35,7 +35,7 @@ public class GameOverPopup : MonoBehaviour
         {
             gameOverPanel.SetActive(true);
 
-            string username = PlayerManager.Instance?.Username ?? "Player";
+            string username = LeaderboardManager.Instance?.Username ?? "Player";
 
             // Format huidige poging
             int achievedMinutes = Mathf.FloorToInt(achievedTime / 60);
@@ -46,15 +46,15 @@ public class GameOverPopup : MonoBehaviour
                                           $"{achievedMinutes:00}:{achievedSeconds:00}.{achievedMilliseconds:000}";
 
             // Format hoogste niveau
-            int highestMinutes = PlayerManager.Instance.MinutesForHighestLevel;
-            int highestSeconds = PlayerManager.Instance.SecondsForHighestLevel;
-            int highestMilliseconds = PlayerManager.Instance.MillisecondsForHighestLevel;
+            int highestMinutes = LeaderboardManager.Instance.MinutesForHighestLevel;
+            int highestSeconds = LeaderboardManager.Instance.SecondsForHighestLevel;
+            int highestMilliseconds = LeaderboardManager.Instance.MillisecondsForHighestLevel;
 
-            highestLevelInfoText.text = $"Highest Level ever reached Level {PlayerManager.Instance.HighestLevelReached} in " +
+            highestLevelInfoText.text = $"Highest Level ever reached Level {LeaderboardManager.Instance.HighestLevelReached} in " +
                                         $"{highestMinutes:00}:{highestSeconds:00}.{highestMilliseconds:000}";
 
             Debug.Log($"Game Over Popup - Current Attempt: Level {achievedLevel}, Time {achievedMinutes:00}:{achievedSeconds:00}.{achievedMilliseconds:000}");
-            Debug.Log($"Game Over Popup - Highest Level: Level {PlayerManager.Instance.HighestLevelReached}, Time {highestMinutes:00}:{highestSeconds:00}.{highestMilliseconds:000}");
+            Debug.Log($"Game Over Popup - Highest Level: Level {LeaderboardManager.Instance.HighestLevelReached}, Time {highestMinutes:00}:{highestSeconds:00}.{highestMilliseconds:000}");
         }
         else
         {

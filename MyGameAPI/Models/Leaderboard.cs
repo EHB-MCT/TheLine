@@ -3,7 +3,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace MyGameAPI.Models
 {
-    public class PlayerStats
+    public class Leaderboard
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]

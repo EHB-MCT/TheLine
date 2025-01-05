@@ -10,14 +10,14 @@ public class StopGame : MonoBehaviour
         Time.timeScale = 0f;
 
         // Haal de laatst voltooide levelgegevens op
-        int lastCompletedLevel = PlayerManager.Instance.LastCompletedLevel;
-        float timeForLastCompletedLevel = PlayerManager.Instance.TimeForLastCompletedLevel;
+        int lastCompletedLevel = LeaderboardManager.Instance.LastCompletedLevel;
+        float timeForLastCompletedLevel = LeaderboardManager.Instance.TimeForLastCompletedLevel;
 
         Debug.Log($"Game over! Last completed level: {lastCompletedLevel}, Time: {timeForLastCompletedLevel} seconds.");
 
         // Update de database met de correcte tijd en level
-        PlayerManager.Instance.StartCoroutine(
-            PlayerManager.Instance.UpdateHighestLevelAndTimeInDatabase(timeForLastCompletedLevel, lastCompletedLevel)
+        LeaderboardManager.Instance.StartCoroutine(
+            LeaderboardManager.Instance.UpdateHighestLevelAndTimeInDatabase(timeForLastCompletedLevel, lastCompletedLevel)
         );
 
         // Toon de popup met alleen de huidige poging
