@@ -9,17 +9,18 @@ public class StopGame : MonoBehaviour
     {
         Time.timeScale = 0f;
 
-        int achievedLevel = PlayerManager.Instance.HighestLevelReached;
-        float timeForHighestLevel = timeElapsed;
+        // Haal de laatst voltooide levelgegevens op
+        int lastCompletedLevel = PlayerManager.Instance.LastCompletedLevel;
+        float timeForLastCompletedLevel = PlayerManager.Instance.TimeForLastCompletedLevel;
 
-        Debug.Log($"Sending data to database: Level={achievedLevel}, Time={timeForHighestLevel} seconds");
+        Debug.Log($"Game over! Last completed level: {lastCompletedLevel}, Time: {timeForLastCompletedLevel} seconds.");
 
-        // Update de database
+        // Update de database met de correcte tijd en level
         PlayerManager.Instance.StartCoroutine(
-            PlayerManager.Instance.UpdateHighestLevelAndTimeInDatabase(timeForHighestLevel, achievedLevel)
+            PlayerManager.Instance.UpdateHighestLevelAndTimeInDatabase(timeForLastCompletedLevel, lastCompletedLevel)
         );
 
-        // Toon de popup met data
+        // Toon de popup met de correcte gegevens
         PlayerManager.Instance.StartCoroutine(
             PlayerManager.Instance.GetPlayerStatsFromDatabase((playerStats) =>
             {
@@ -30,12 +31,15 @@ public class StopGame : MonoBehaviour
                         ? (playerStats.Minutes * 60 + playerStats.Seconds + playerStats.Milliseconds / 1000f)
                         : 0;
 
-                    gameOverPopup.ShowGameOverPopup(achievedLevel, timeForHighestLevel, bestLevel, bestTime);
+                    gameOverPopup.ShowGameOverPopup(lastCompletedLevel, timeForLastCompletedLevel, bestLevel, bestTime);
                 }
             })
         );
 
+        // Stop de tekenactiviteit
         StopDrawing stopDrawing = lineDrawer.GetComponent<StopDrawing>();
         stopDrawing?.StopDrawingProcess();
     }
+
+
 }
