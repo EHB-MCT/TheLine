@@ -1,14 +1,26 @@
-/*
- * This script checks if the line collides with an obstacle.
- * If a collision occurs with an object tagged as 'obstacle', the game is stopped using the StopGame script.
- */
-
 using UnityEngine;
 
 public class ObstacleCollisionChecker : MonoBehaviour
 {
     [SerializeField] private StopGame stopGame; // Reference to the StopGame script
     [SerializeField] private LineDrawer lineDrawer; // Reference to the LineDrawer script
+    private float startTime; // Houd de starttijd bij
+
+    void Start()
+    {
+        // Stel de starttijd in bij het begin van het spel of level.
+        startTime = Time.time;
+
+        // Controleer of de vereiste componenten zijn toegewezen.
+        if (stopGame == null)
+        {
+            Debug.LogError("StopGame script is not assigned in the Inspector!");
+        }
+        if (lineDrawer == null)
+        {
+            Debug.LogError("LineDrawer script is not assigned in the Inspector!");
+        }
+    }
 
     void OnTriggerEnter2D(Collider2D other)
     {
@@ -17,8 +29,11 @@ public class ObstacleCollisionChecker : MonoBehaviour
         {
             Debug.Log("Obstacle hit!"); // Log that an obstacle has been hit.
 
+            // Bereken de verstreken tijd.
+            float timeElapsed = Time.time - startTime;
+
             // Stop the game and line drawing.
-            stopGame?.StopGameProcess(lineDrawer);
+            stopGame?.StopGameProcess(lineDrawer, timeElapsed);
         }
     }
 }

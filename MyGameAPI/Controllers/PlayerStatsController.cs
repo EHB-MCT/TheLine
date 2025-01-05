@@ -18,9 +18,19 @@ public class PlayerStatsController : ControllerBase
     [HttpPost("update-highest-level")]
     public async Task<IActionResult> UpdateHighestLevel([FromBody] UpdateLevelRequest request)
     {
-        if (string.IsNullOrEmpty(request.PlayerId) || request.NewLevel <= 0 || (request.Minutes < 0 && request.Seconds < 0 && request.Milliseconds < 0))
+        if (string.IsNullOrEmpty(request.PlayerId))
         {
-            return BadRequest(new { message = "Invalid data provided" });
+            return BadRequest(new { message = "PlayerId is required" });
+        }
+
+        if (request.NewLevel <= 0)
+        {
+            return BadRequest(new { message = "Invalid level provided" });
+        }
+
+        if (request.Minutes < 0 || request.Seconds < 0 || request.Milliseconds < 0)
+        {
+            return BadRequest(new { message = "Invalid time values provided" });
         }
 
         var playerStatsCollection = _mongoDbService.Database.GetCollection<PlayerStats>("PlayerStats");

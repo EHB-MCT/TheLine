@@ -36,7 +36,7 @@ public class Login : MonoBehaviour
         if (string.IsNullOrEmpty(usernameField.text) || string.IsNullOrEmpty(passwordField.text))
         {
             feedbackText.text = "Username and password cannot be empty!";
-            LastFeedbackMessage = feedbackText.text; // Update de persistente feedbacktekst
+            LastFeedbackMessage = feedbackText.text; 
             yield break;
         }
 
@@ -64,22 +64,22 @@ public class Login : MonoBehaviour
                 try
                 {
                     PlayerLoginResponse response = JsonUtility.FromJson<PlayerLoginResponse>(request.downloadHandler.text);
-                    Debug.Log("Highest Level Reached: " + response.highestLevelReached);
+                    Debug.Log($"Login successful for {response.username}!");
 
                     // Stel gegevens in via PlayerManager
-                    PlayerManager.Instance.SetPlayerData(response.playerId, response.highestLevelReached);
+                    PlayerManager.Instance.SetPlayerData(response.playerId, response.username, response.highestLevelReached);
                 }
                 catch (System.Exception ex)
                 {
                     Debug.LogError("Failed to parse response: " + ex.Message);
                 }
 
-                IsLoggedIn = true; // Markeer als ingelogd
+                IsLoggedIn = true;
             }
             else
             {
                 feedbackText.text = "Login failed: " + request.responseCode;
-                LastFeedbackMessage = feedbackText.text; // Update de persistente feedbacktekst
+                LastFeedbackMessage = feedbackText.text;
                 Debug.LogError("Error: " + request.error);
             }
         }
@@ -90,6 +90,7 @@ public class Login : MonoBehaviour
     {
         public string message;
         public string playerId;
+        public string username; // Voeg de gebruikersnaam toe
         public int highestLevelReached;
     }
 

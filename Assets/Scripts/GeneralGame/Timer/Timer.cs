@@ -1,9 +1,3 @@
-/*
- * This script handles the game timer, keeping track of elapsed time, displaying it on the UI,
- * and providing functions to reset and reduce the timer.
- * It also follows the Singleton pattern to ensure there is only one active timer instance.
- */
-
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -27,14 +21,6 @@ public class Timer : MonoBehaviour
         else
         {
             Destroy(gameObject);  // Destroys this object if another instance already exists
-        }
-    }
-
-    void Start()
-    {
-        if (Instance == this)  // Start the timer only if this is the active instance
-        {
-            timeElapsed = 0f;  // Initialize the timer to 0 when starting the game
         }
     }
 

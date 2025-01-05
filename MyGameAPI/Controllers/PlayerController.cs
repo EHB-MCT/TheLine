@@ -71,6 +71,12 @@ public class PlayerController : ControllerBase
             return Unauthorized(new { message = "Invalid username or password" });
         }
 
-        return Ok(new { message = "Login successful!", playerId = player.Id });
+        // Voeg de username en eventueel andere velden toe aan de respons
+        return Ok(new
+        {
+            message = "Login successful!",
+            playerId = player.Id,
+            username = player.Username // Voeg username toe aan de respons
+        });
     }
 }

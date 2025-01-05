@@ -8,6 +8,9 @@ public class PlayerManager : MonoBehaviour
 
     public string PlayerId { get; private set; }
     public int HighestLevelReached { get; private set; }
+    public float TimeForHighestLevel { get; private set; } // Tijd voor de laatst voltooide level
+
+    public string Username { get; private set; }
 
     private string updateLevelUrl = "http://localhost:5033/api/playerstats/update-highest-level";
 
@@ -24,28 +27,31 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    public void SetPlayerData(string playerId, int highestLevelReached)
+    public void SetPlayerData(string playerId, string username, int highestLevelReached)
     {
-        PlayerId = playerId;
-        HighestLevelReached = highestLevelReached;
-        Debug.Log($"PlayerManager initialized: PlayerId={PlayerId}, HighestLevelReached={HighestLevelReached}");
+        this.PlayerId = playerId;
+        this.Username = username; // Stel de gebruikersnaam in
+        this.HighestLevelReached = highestLevelReached;
+
+        Debug.Log($"PlayerManager initialized: PlayerId={playerId}, Username={username}, HighestLevelReached={highestLevelReached}");
     }
 
-    public void UpdateHighestLevel(int newLevel, float timeElapsed)
+    public void UpdateHighestLevel(int completedLevel, float timeElapsed)
     {
-        if (newLevel > HighestLevelReached)
+        // Controleer of het voltooide level een nieuwe hoogste score is
+        if (completedLevel > HighestLevelReached)
         {
-            HighestLevelReached = newLevel;
-            Debug.Log($"New highest level reached: {HighestLevelReached}");
-            StartCoroutine(UpdateHighestLevelAndTimeInDatabase(timeElapsed));
+            HighestLevelReached = completedLevel; // Update hoogste voltooide level
+            TimeForHighestLevel = timeElapsed; // Tijd van dat level
+            Debug.Log($"New highest level reached: {HighestLevelReached} at {TimeForHighestLevel} seconds.");
         }
         else
         {
-            Debug.Log($"Level {newLevel} completed, but it's not a new highest level.");
+            Debug.Log($"Level {completedLevel} completed, but it's not a new highest level.");
         }
     }
 
-    private IEnumerator UpdateHighestLevelAndTimeInDatabase(float timeElapsed)
+    public IEnumerator UpdateHighestLevelAndTimeInDatabase(float timeElapsed, int achievedLevel)
     {
         int minutes = Mathf.FloorToInt(timeElapsed / 60);
         int seconds = Mathf.FloorToInt(timeElapsed % 60);
@@ -54,13 +60,11 @@ public class PlayerManager : MonoBehaviour
         var json = JsonUtility.ToJson(new UpdateTimeRequest
         {
             PlayerId = PlayerId,
-            NewLevel = HighestLevelReached,
+            NewLevel = achievedLevel, // Gebruik het doorgegeven voltooide niveau
             Minutes = minutes,
             Seconds = seconds,
             Milliseconds = milliseconds
         });
-
-        Debug.Log($"Sending JSON: {json}"); // Log de JSON voor debugging
 
         using (UnityWebRequest request = new UnityWebRequest(updateLevelUrl, "POST"))
         {
@@ -78,16 +82,46 @@ public class PlayerManager : MonoBehaviour
             else
             {
                 Debug.LogError($"Failed to update highest level and time: {request.error}");
-                Debug.LogError($"Response: {request.downloadHandler.text}"); // Log de response van de server
-                Debug.Log($"Sending JSON: {json}");
             }
         }
     }
+
+    public IEnumerator GetPlayerStatsFromDatabase(System.Action<PlayerStats> onStatsRetrieved)
+    {
+        string url = $"http://localhost:5033/api/playerstats/{PlayerId}";
+
+        using (UnityWebRequest request = UnityWebRequest.Get(url))
+        {
+            yield return request.SendWebRequest();
+
+            if (request.result == UnityWebRequest.Result.Success)
+            {
+                var playerStats = JsonUtility.FromJson<PlayerStats>(request.downloadHandler.text);
+                onStatsRetrieved?.Invoke(playerStats);
+            }
+            else
+            {
+                Debug.LogError($"Failed to retrieve player stats: {request.error}");
+                onStatsRetrieved?.Invoke(null); // Stuur null als de aanvraag mislukt
+            }
+        }
+    }
+
     [System.Serializable]
     public class UpdateTimeRequest
     {
         public string PlayerId;
         public int NewLevel; // Verander van LevelCompleted naar HighestLevelReached
+        public int Minutes;
+        public int Seconds;
+        public int Milliseconds;
+    }
+
+    [System.Serializable]
+    public class PlayerStats
+    {
+        public string PlayerId;
+        public int HighestLevelReached;
         public int Minutes;
         public int Seconds;
         public int Milliseconds;

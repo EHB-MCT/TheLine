@@ -1,8 +1,3 @@
-/*
- * This script checks if a line drawn using the attached LineDrawer component intersects itself. 
- * If it does, the game is stopped using the StopGame script.
- */
-
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,6 +8,7 @@ public class LineSelfIntersectionChecker : MonoBehaviour
     private bool isIntersected = false;
 
     [SerializeField] private StopGame stopGame; // Reference to the StopGame script
+    private float startTime; // Houd de starttijd bij
 
     void Start()
     {
@@ -28,6 +24,9 @@ public class LineSelfIntersectionChecker : MonoBehaviour
         {
             Debug.LogError("StopGame script is not assigned in the Inspector!");
         }
+
+        // Stel de starttijd in
+        startTime = Time.time;
     }
 
     void Update()
@@ -43,8 +42,11 @@ public class LineSelfIntersectionChecker : MonoBehaviour
                 Debug.Log("GAME OVER! The line has self-intersected.");
                 isIntersected = true;
 
+                // Bereken de verstreken tijd
+                float timeElapsed = Time.time - startTime;
+
                 // Stop the game using the StopGame script.
-                stopGame?.StopGameProcess(lineDrawer);
+                stopGame?.StopGameProcess(lineDrawer, timeElapsed);
             }
         }
     }
