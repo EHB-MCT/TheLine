@@ -8,7 +8,9 @@ public class PlayerManager : MonoBehaviour
 
     public string PlayerId { get; private set; }
     public int HighestLevelReached { get; private set; }
-    public float TimeForHighestLevel { get; private set; } // Tijd voor de laatst voltooide level
+    public float TimeForHighestLevel { get; private set; } // Tijd voor de hoogste level
+    public int LastCompletedLevel { get; private set; } // Laatst volledig voltooide level
+    public float TimeForLastCompletedLevel { get; private set; } // Tijd voor de laatst voltooide level
 
     public string Username { get; private set; }
 
@@ -30,26 +32,35 @@ public class PlayerManager : MonoBehaviour
     public void SetPlayerData(string playerId, string username, int highestLevelReached)
     {
         this.PlayerId = playerId;
-        this.Username = username; // Stel de gebruikersnaam in
+        this.Username = username;
         this.HighestLevelReached = highestLevelReached;
 
         Debug.Log($"PlayerManager initialized: PlayerId={playerId}, Username={username}, HighestLevelReached={highestLevelReached}");
     }
 
+    public void UpdateLastCompletedLevel(int attemptedLevel, float timeElapsed)
+    {
+        // Het laatst volledig voltooide level is het level vóór het huidige
+        LastCompletedLevel = attemptedLevel - 1;
+        TimeForLastCompletedLevel = timeElapsed;
+
+        Debug.Log($"Last completed level updated: {LastCompletedLevel} at {TimeForLastCompletedLevel} seconds.");
+    }
+
+
     public void UpdateHighestLevel(int completedLevel, float timeElapsed)
     {
-        // Controleer of het voltooide level een nieuwe hoogste score is
         if (completedLevel > HighestLevelReached)
         {
-            HighestLevelReached = completedLevel; // Update hoogste voltooide level
-            TimeForHighestLevel = timeElapsed; // Tijd van dat level
+            HighestLevelReached = completedLevel;
+            TimeForHighestLevel = timeElapsed;
             Debug.Log($"New highest level reached: {HighestLevelReached} at {TimeForHighestLevel} seconds.");
         }
-        else
-        {
-            Debug.Log($"Level {completedLevel} completed, but it's not a new highest level.");
-        }
+
+        // Update het laatst volledig voltooide level
+        UpdateLastCompletedLevel(completedLevel, timeElapsed);
     }
+
 
     public IEnumerator UpdateHighestLevelAndTimeInDatabase(float timeElapsed, int achievedLevel)
     {
@@ -60,7 +71,7 @@ public class PlayerManager : MonoBehaviour
         var json = JsonUtility.ToJson(new UpdateTimeRequest
         {
             PlayerId = PlayerId,
-            NewLevel = achievedLevel, // Gebruik het doorgegeven voltooide niveau
+            NewLevel = achievedLevel,
             Minutes = minutes,
             Seconds = seconds,
             Milliseconds = milliseconds
@@ -111,7 +122,7 @@ public class PlayerManager : MonoBehaviour
     public class UpdateTimeRequest
     {
         public string PlayerId;
-        public int NewLevel; // Verander van LevelCompleted naar HighestLevelReached
+        public int NewLevel; 
         public int Minutes;
         public int Seconds;
         public int Milliseconds;
