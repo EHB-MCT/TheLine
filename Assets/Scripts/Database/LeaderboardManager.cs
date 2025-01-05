@@ -2,9 +2,9 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.Networking;
 
-public class PlayerManager : MonoBehaviour
+public class LeaderboardManager : MonoBehaviour
 {
-    public static PlayerManager Instance { get; private set; }
+    public static LeaderboardManager Instance { get; private set; }
 
     public string PlayerId { get; private set; }
     public int HighestLevelReached { get; private set; }
@@ -18,7 +18,7 @@ public class PlayerManager : MonoBehaviour
 
     public string Username { get; private set; }
 
-    private string updateLevelUrl = "http://localhost:5033/api/playerstats/update-highest-level";
+    private string updateLevelUrl = "http://localhost:5033/api/leaderboard/update-highest-level";
 
     private void Awake()
     {
@@ -32,7 +32,7 @@ public class PlayerManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
-    public void SetPlayerData(string playerId, string username, int highestLevelReached, int minutes, int seconds, int milliseconds)
+    public void SetLeaderboardData(string playerId, string username, int highestLevelReached, int minutes, int seconds, int milliseconds)
     {
         PlayerId = playerId;
         Username = username;
@@ -41,7 +41,7 @@ public class PlayerManager : MonoBehaviour
         SecondsForHighestLevel = seconds;
         MillisecondsForHighestLevel = milliseconds;
 
-        Debug.Log($"PlayerManager initialized: " +
+        Debug.Log($"LeaderboardManager initialized: " +
                 $"PlayerId={playerId}, Username={username}, " +
                 $"HighestLevelReached={highestLevelReached}, Time={minutes:00}:{seconds:00}.{milliseconds:000}");
     }
@@ -105,9 +105,9 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    public IEnumerator GetPlayerStatsFromDatabase(System.Action<PlayerStats> onStatsRetrieved)
+    public IEnumerator GetLeaderboardFromDatabase(System.Action<Leaderboard> onStatsRetrieved)
     {
-        string url = $"http://localhost:5033/api/playerstats/{PlayerId}";
+        string url = $"http://localhost:5033/api/leaderboard/{PlayerId}";
 
         using (UnityWebRequest request = UnityWebRequest.Get(url))
         {
@@ -115,12 +115,12 @@ public class PlayerManager : MonoBehaviour
 
             if (request.result == UnityWebRequest.Result.Success)
             {
-                var playerStats = JsonUtility.FromJson<PlayerStats>(request.downloadHandler.text);
-                onStatsRetrieved?.Invoke(playerStats);
+                var leaderboard = JsonUtility.FromJson<Leaderboard>(request.downloadHandler.text);
+                onStatsRetrieved?.Invoke(leaderboard);
             }
             else
             {
-                Debug.LogError($"Failed to retrieve player stats: {request.error}");
+                Debug.LogError($"Failed to retrieve leaderboard: {request.error}");
                 onStatsRetrieved?.Invoke(null); // Stuur null als de aanvraag mislukt
             }
         }
@@ -137,7 +137,7 @@ public class PlayerManager : MonoBehaviour
     }
 
     [System.Serializable]
-    public class PlayerStats
+    public class Leaderboard
     {
         public string PlayerId;
         public int HighestLevelReached;

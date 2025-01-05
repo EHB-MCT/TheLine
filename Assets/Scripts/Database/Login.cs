@@ -68,8 +68,8 @@ try
               $"HighestLevelReached: {response.highestLevelReached}, " +
               $"Time: {response.minutes:00}:{response.seconds:00}.{response.milliseconds:000}");
 
-    // Stel gegevens in via PlayerManager
-    PlayerManager.Instance.SetPlayerData(
+    // Stel gegevens in via Leadeboard
+    LeaderboardManager.Instance.SetLeaderboardData(
         response.playerId, 
         response.username, 
         response.highestLevelReached,

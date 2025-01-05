@@ -28,8 +28,8 @@ public class LoadNextScene : MonoBehaviour
         float elapsedTime = Timer.Instance.GetElapsedTime();
         Debug.Log($"Time elapsed for level {currentSceneIndex}: {elapsedTime:F2} seconds");
 
-        // Controleer en update hoogste level en sla tijd op in PlayerManager
-        PlayerManager.Instance.UpdateHighestLevel(currentSceneIndex, elapsedTime);
+        // Controleer en update hoogste level en sla tijd op in LeaderboardManager
+        LeaderboardManager.Instance.UpdateHighestLevel(currentSceneIndex, elapsedTime);
 
         // Check of het volgende level beschikbaar is
         if (nextSceneIndex < SceneManager.sceneCountInBuildSettings)

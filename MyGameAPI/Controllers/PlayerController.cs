@@ -24,7 +24,7 @@ public class PlayerController : ControllerBase
         }
 
         var playersCollection = _mongoDbService.Database.GetCollection<Player>("Players");
-        var playerStatsCollection = _mongoDbService.Database.GetCollection<PlayerStats>("PlayerStats");
+        var leaderboardCollection = _mongoDbService.Database.GetCollection<Leaderboard>("Leaderboard");
         var existingPlayer = await playersCollection.Find(p => p.Username == player.Username).FirstOrDefaultAsync();
 
         if (existingPlayer != null)
@@ -43,19 +43,19 @@ public class PlayerController : ControllerBase
 
         await playersCollection.InsertOneAsync(player);
 
-        // Voeg een nieuw record toe in PlayerStats
-        var playerStats = new PlayerStats
+        // Voeg een nieuw record toe in Leaderboard
+        var leaderboard = new Leaderboard
         {
             PlayerId = player.Id,
             HighestLevelReached = 0
         };
 
-        await playerStatsCollection.InsertOneAsync(playerStats);
+        await leaderboardCollection.InsertOneAsync(leaderboard);
 
         return Ok(new { message = "Player signed up successfully!", playerId = player.Id });
     }
 
-        [HttpPost("login")]
+    [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] Player loginDetails)
     {
         if (string.IsNullOrEmpty(loginDetails.Username) || string.IsNullOrEmpty(loginDetails.Password))
@@ -64,7 +64,7 @@ public class PlayerController : ControllerBase
         }
 
         var playersCollection = _mongoDbService.Database.GetCollection<Player>("Players");
-        var playerStatsCollection = _mongoDbService.Database.GetCollection<PlayerStats>("PlayerStats");
+        var leaderboardCollection = _mongoDbService.Database.GetCollection<Leaderboard>("Leaderboard");
 
         // Zoek de speler op basis van de gebruikersnaam
         var player = await playersCollection.Find(p => p.Username == loginDetails.Username).FirstOrDefaultAsync();
@@ -76,12 +76,12 @@ public class PlayerController : ControllerBase
         }
 
         // Haal de statistieken van de speler op
-        var playerStats = await playerStatsCollection.Find(ps => ps.PlayerId == player.Id).FirstOrDefaultAsync();
+        var leaderboard = await leaderboardCollection.Find(ps => ps.PlayerId == player.Id).FirstOrDefaultAsync();
 
-        if (playerStats == null)
+        if (leaderboard == null)
         {
             // Als er geen stats-record is, creëer een lege
-            playerStats = new PlayerStats
+            leaderboard = new Leaderboard
             {
                 PlayerId = player.Id,
                 HighestLevelReached = 0,
@@ -89,7 +89,7 @@ public class PlayerController : ControllerBase
                 Seconds = 0,
                 Milliseconds = 0
             };
-            await playerStatsCollection.InsertOneAsync(playerStats);
+            await leaderboardCollection.InsertOneAsync(leaderboard);
         }
 
         // Voeg de statistieken toe aan de respons
@@ -98,10 +98,10 @@ public class PlayerController : ControllerBase
             message = "Login successful!",
             playerId = player.Id,
             username = player.Username,
-            highestLevelReached = playerStats.HighestLevelReached,
-            minutes = playerStats.Minutes,
-            seconds = playerStats.Seconds,
-            milliseconds = playerStats.Milliseconds
+            highestLevelReached = leaderboard.HighestLevelReached,
+            minutes = leaderboard.Minutes,
+            seconds = leaderboard.Seconds,
+            milliseconds = leaderboard.Milliseconds
         });
     }
 }
