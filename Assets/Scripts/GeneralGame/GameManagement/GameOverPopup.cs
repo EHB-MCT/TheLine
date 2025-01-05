@@ -4,7 +4,8 @@ using UnityEngine.UI;
 public class GameOverPopup : MonoBehaviour
 {
     [SerializeField] private GameObject gameOverPanel; // Het Game Over-paneel
-    [SerializeField] private Text infoText; // Eén tekstcomponent voor zowel level als tijd
+    [SerializeField] private Text currentAttemptInfoText; // Tekst voor huidige poging
+    [SerializeField] private Text highestLevelInfoText; // Tekst voor hoogste niveau en tijd
 
     void Start()
     {
@@ -17,13 +18,18 @@ public class GameOverPopup : MonoBehaviour
             Debug.LogError("Game Over Panel is not assigned in the Inspector!");
         }
 
-        if (infoText == null)
+        if (currentAttemptInfoText == null)
         {
-            Debug.LogError("Info Text is not assigned in the Inspector!");
+            Debug.LogError("Current Attempt Info Text is not assigned in the Inspector!");
+        }
+
+        if (highestLevelInfoText == null)
+        {
+            Debug.LogError("Highest Level Info Text is not assigned in the Inspector!");
         }
     }
 
-    public void ShowGameOverPopup(int achievedLevel, float achievedTime, int bestLevel, float bestTime)
+    public void ShowGameOverPopup(int achievedLevel, float achievedTime)
     {
         if (gameOverPanel != null)
         {
@@ -36,23 +42,23 @@ public class GameOverPopup : MonoBehaviour
             int achievedSeconds = Mathf.FloorToInt(achievedTime % 60);
             int achievedMilliseconds = Mathf.FloorToInt((achievedTime * 1000) % 1000);
 
-            // Format beste poging
-            int bestMinutes = Mathf.FloorToInt(bestTime / 60);
-            int bestSeconds = Mathf.FloorToInt(bestTime % 60);
-            int bestMilliseconds = Mathf.FloorToInt((bestTime * 1000) % 1000);
+            currentAttemptInfoText.text = $"{username} died after reaching Level {achievedLevel} in " +
+                                          $"{achievedMinutes:00}:{achievedSeconds:00}.{achievedMilliseconds:000}";
 
-            infoText.text = $"{username} died after reaching Level {achievedLevel} in " +
-                            $"{achievedMinutes:00}:{achievedSeconds:00}.{achievedMilliseconds:000}\n" +
-                            $"Best Attempt: Level {bestLevel} in " +
-                            $"{bestMinutes:00}:{bestSeconds:00}.{bestMilliseconds:000}";
+            // Format hoogste niveau
+            int highestMinutes = PlayerManager.Instance.MinutesForHighestLevel;
+            int highestSeconds = PlayerManager.Instance.SecondsForHighestLevel;
+            int highestMilliseconds = PlayerManager.Instance.MillisecondsForHighestLevel;
 
-            Debug.Log($"Game Over Popup - Current: Level {achievedLevel}, Time {achievedMinutes:00}:{achievedSeconds:00}.{achievedMilliseconds:000}, " +
-                    $"Best: Level {bestLevel}, Time {bestMinutes:00}:{bestSeconds:00}.{bestMilliseconds:000}");
+            highestLevelInfoText.text = $"Highest Level ever reached Level {PlayerManager.Instance.HighestLevelReached} in " +
+                                        $"{highestMinutes:00}:{highestSeconds:00}.{highestMilliseconds:000}";
+
+            Debug.Log($"Game Over Popup - Current Attempt: Level {achievedLevel}, Time {achievedMinutes:00}:{achievedSeconds:00}.{achievedMilliseconds:000}");
+            Debug.Log($"Game Over Popup - Highest Level: Level {PlayerManager.Instance.HighestLevelReached}, Time {highestMinutes:00}:{highestSeconds:00}.{highestMilliseconds:000}");
         }
         else
         {
             Debug.LogError("GameOverPopup: Game Over panel is not assigned.");
         }
     }
-
 }

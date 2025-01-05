@@ -55,7 +55,7 @@ public class PlayerController : ControllerBase
         return Ok(new { message = "Player signed up successfully!", playerId = player.Id });
     }
 
-    [HttpPost("login")]
+        [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] Player loginDetails)
     {
         if (string.IsNullOrEmpty(loginDetails.Username) || string.IsNullOrEmpty(loginDetails.Password))
@@ -64,19 +64,44 @@ public class PlayerController : ControllerBase
         }
 
         var playersCollection = _mongoDbService.Database.GetCollection<Player>("Players");
+        var playerStatsCollection = _mongoDbService.Database.GetCollection<PlayerStats>("PlayerStats");
+
+        // Zoek de speler op basis van de gebruikersnaam
         var player = await playersCollection.Find(p => p.Username == loginDetails.Username).FirstOrDefaultAsync();
 
+        // Controleer of de speler bestaat en het wachtwoord correct is
         if (player == null || !BCrypt.Net.BCrypt.Verify(loginDetails.Password, player.Password))
         {
             return Unauthorized(new { message = "Invalid username or password" });
         }
 
-        // Voeg de username en eventueel andere velden toe aan de respons
+        // Haal de statistieken van de speler op
+        var playerStats = await playerStatsCollection.Find(ps => ps.PlayerId == player.Id).FirstOrDefaultAsync();
+
+        if (playerStats == null)
+        {
+            // Als er geen stats-record is, creëer een lege
+            playerStats = new PlayerStats
+            {
+                PlayerId = player.Id,
+                HighestLevelReached = 0,
+                Minutes = 0,
+                Seconds = 0,
+                Milliseconds = 0
+            };
+            await playerStatsCollection.InsertOneAsync(playerStats);
+        }
+
+        // Voeg de statistieken toe aan de respons
         return Ok(new
         {
             message = "Login successful!",
             playerId = player.Id,
-            username = player.Username // Voeg username toe aan de respons
+            username = player.Username,
+            highestLevelReached = playerStats.HighestLevelReached,
+            minutes = playerStats.Minutes,
+            seconds = playerStats.Seconds,
+            milliseconds = playerStats.Milliseconds
         });
     }
 }

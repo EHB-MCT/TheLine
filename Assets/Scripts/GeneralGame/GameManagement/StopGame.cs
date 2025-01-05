@@ -20,26 +20,14 @@ public class StopGame : MonoBehaviour
             PlayerManager.Instance.UpdateHighestLevelAndTimeInDatabase(timeForLastCompletedLevel, lastCompletedLevel)
         );
 
-        // Toon de popup met de correcte gegevens
-        PlayerManager.Instance.StartCoroutine(
-            PlayerManager.Instance.GetPlayerStatsFromDatabase((playerStats) =>
-            {
-                if (gameOverPopup != null)
-                {
-                    int bestLevel = playerStats?.HighestLevelReached ?? 0;
-                    float bestTime = playerStats != null
-                        ? (playerStats.Minutes * 60 + playerStats.Seconds + playerStats.Milliseconds / 1000f)
-                        : 0;
-
-                    gameOverPopup.ShowGameOverPopup(lastCompletedLevel, timeForLastCompletedLevel, bestLevel, bestTime);
-                }
-            })
-        );
+        // Toon de popup met alleen de huidige poging
+        if (gameOverPopup != null)
+        {
+            gameOverPopup.ShowGameOverPopup(lastCompletedLevel, timeForLastCompletedLevel);
+        }
 
         // Stop de tekenactiviteit
         StopDrawing stopDrawing = lineDrawer.GetComponent<StopDrawing>();
         stopDrawing?.StopDrawingProcess();
     }
-
-
 }

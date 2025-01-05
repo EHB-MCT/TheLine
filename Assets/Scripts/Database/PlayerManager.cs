@@ -12,6 +12,10 @@ public class PlayerManager : MonoBehaviour
     public int LastCompletedLevel { get; private set; } // Laatst volledig voltooide level
     public float TimeForLastCompletedLevel { get; private set; } // Tijd voor de laatst voltooide level
 
+    public int MinutesForHighestLevel { get; private set; } // Minuten voor hoogste level
+    public int SecondsForHighestLevel { get; private set; } // Seconden voor hoogste level
+    public int MillisecondsForHighestLevel { get; private set; } // Milliseconden voor hoogste level
+
     public string Username { get; private set; }
 
     private string updateLevelUrl = "http://localhost:5033/api/playerstats/update-highest-level";
@@ -28,14 +32,18 @@ public class PlayerManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
-    public void SetPlayerData(string playerId, string username, int highestLevelReached)
+    public void SetPlayerData(string playerId, string username, int highestLevelReached, int minutes, int seconds, int milliseconds)
     {
-        this.PlayerId = playerId;
-        this.Username = username;
-        this.HighestLevelReached = highestLevelReached;
+        PlayerId = playerId;
+        Username = username;
+        HighestLevelReached = highestLevelReached;
+        MinutesForHighestLevel = minutes;
+        SecondsForHighestLevel = seconds;
+        MillisecondsForHighestLevel = milliseconds;
 
-        Debug.Log($"PlayerManager initialized: PlayerId={playerId}, Username={username}, HighestLevelReached={highestLevelReached}");
+        Debug.Log($"PlayerManager initialized: " +
+                $"PlayerId={playerId}, Username={username}, " +
+                $"HighestLevelReached={highestLevelReached}, Time={minutes:00}:{seconds:00}.{milliseconds:000}");
     }
 
     public void UpdateLastCompletedLevel(int attemptedLevel, float timeElapsed)
@@ -52,7 +60,7 @@ public class PlayerManager : MonoBehaviour
     {
         if (completedLevel > HighestLevelReached)
         {
-            HighestLevelReached = completedLevel;
+            HighestLevelReached = completedLevel - 1;
             TimeForHighestLevel = timeElapsed;
             Debug.Log($"New highest level reached: {HighestLevelReached} at {TimeForHighestLevel} seconds.");
         }
