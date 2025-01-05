@@ -77,18 +77,27 @@ public class LeaderboardController : ControllerBase
     public async Task<IActionResult> GetRankedLeaderboard()
     {
         var leaderboardCollection = _mongoDbService.Database.GetCollection<Leaderboard>("Leaderboard");
+        var playersCollection = _mongoDbService.Database.GetCollection<Player>("Players");
+
+        // Haal alle leaderboard items op
         var leaderboardEntries = await leaderboardCollection.Find(_ => true).ToListAsync();
 
-        // Sorteer op hoogste level, dan op tijd (minuten, seconden, milliseconden)
+        // Haal alle spelers op en zet ze in een dictionary voor snelle toegang
+        var players = await playersCollection.Find(_ => true).ToListAsync();
+        var playerDictionary = players.ToDictionary(p => p.Id, p => p.Username);
+
+        // Sorteer en voeg gebruikersnaam toe, beperk tot top 10
         var rankedLeaderboard = leaderboardEntries
             .OrderByDescending(entry => entry.HighestLevelReached)
             .ThenBy(entry => entry.Minutes)
             .ThenBy(entry => entry.Seconds)
             .ThenBy(entry => entry.Milliseconds)
+            .Take(10) // Alleen de top 10
             .Select((entry, index) => new
             {
                 Rank = index + 1,
                 entry.PlayerId,
+                Username = playerDictionary.ContainsKey(entry.PlayerId) ? playerDictionary[entry.PlayerId] : "Unknown",
                 entry.HighestLevelReached,
                 entry.Minutes,
                 entry.Seconds,

@@ -624,7 +624,7 @@ GameObject:
   - component: {fileID: 287916613}
   - component: {fileID: 287916612}
   m_Layer: 0
-  m_Name: playermanager
+  m_Name: LeaderboardManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
