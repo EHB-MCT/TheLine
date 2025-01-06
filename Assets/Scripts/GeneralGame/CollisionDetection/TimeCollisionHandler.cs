@@ -8,11 +8,25 @@ public class TimeCollisionHandler : MonoBehaviour
         {
             Debug.Log("TimeIcon hit! The object will be destroyed.");
 
-            // Verlaag de resterende tijd met 2 seconden
-            Timer.Instance.ReduceTime(2f);
+            // Controleer of de instantie van TimeIconManager niet null is
+            if (TimeIconManager.Instance != null)
+            {
+                TimeIconManager.Instance.AddTimeIcon();
+            }
+            else
+            {
+                Debug.LogError("TimeIconManager instance is null. Make sure the TimeIconManager is in the scene.");
+            }
 
-            // Verhoog de teller in de TimeIconManager
-            TimeIconManager.Instance.AddTimeIcon();
+            // Controleer of de instantie van Timer niet null is
+            if (Timer.Instance != null)
+            {
+                Timer.Instance.ReduceTime(2f);
+            }
+            else
+            {
+                Debug.LogError("Timer instance is null. Make sure the Timer is in the scene.");
+            }
 
             // Vernietig het TimeIcon-object
             Destroy(other.gameObject);
