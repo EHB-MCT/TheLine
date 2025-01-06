@@ -5,7 +5,7 @@
 **Genre**: Casual  
 **Platform**: PC  
 **Development Status**: In Progress  
-**Last Updated**: 05/01/2025
+**Last Updated**: 06/01/2025
 
 ---
 
@@ -70,6 +70,73 @@
 
 **Outcome**: Goal partially achieved (DrawingLine script partially improved).
 
+#### [Project Cleanup]
+**Date**: 29/12/2024  
+**Changes/Features Implemented**:  
+- Added a changelog for better tracking of project changes.  
+- Improved documentation files, including the README, CONTRIBUTING guidelines, CODE_OF_CONDUCT, and PROGRESS file.  
+- Refined folder structure for better organization and clarity.  
+
+**Challenges**:  
+- None.  
+
+**Outcome**: Goal successfully achieved, resulting in a cleaner and more organized project structure.
+
+---
+
+#### [Login & Signup Implementation]
+**Date**: 02/01/2025  
+**Changes/Features Implemented**:  
+- Implemented login and signup functionality.  
+
+**Challenges**:  
+- Managing user data effectively.  
+- Ensuring secure and efficient data storage.  
+- Integrating login and signup functionality with .NET backend.  
+
+**Outcome**: Goal successfully achieved, with login and signup features working as expected.
+
+---
+
+#### [Storing Player Data]
+**Date**: 04/01/2025  
+**Changes/Features Implemented**:  
+- Added new collections to MongoDB for storing player data.  
+- Ensured stable backend connections to the database.  
+- Implemented functionality for updating the database during gameplay.  
+
+**Challenges**:  
+- Establishing a reliable connection between gameplay events and database updates.  
+
+**Outcome**: Goal partially achieved, although some visual bugs persist regarding player data.
+
+---
+
+#### [Leaderboard UI & Backend]
+**Date**: 05/01/2025  
+**Changes/Features Implemented**:  
+- Implemented leaderboard UI in the game scene.  
+- Created and integrated backend for storing and managing leaderboard data.  
+
+**Challenges**:  
+- Tracking player scores and times efficiently.  
+
+**Outcome**: Goal partially achieved, but there is a bug where the highscore time doesn't appear on the first attempt; re-running the game is required to display the data.
+
+---
+
+#### [Player & Global Stats]
+**Date**: 06/01/2025  
+**Changes/Features Implemented**:  
+- Added player statistics functionality.  
+- Implemented global stats tracking for comparison across players.  
+
+**Challenges**:  
+- Ensuring smooth integration between frontend and backend.  
+- Synchronizing data correctly with the database.  
+
+**Outcome**: Goal partially achieved, but some levels are not syncing correctly with player data.
+
 ---
 
 🛠️ **Development Progress**
@@ -108,12 +175,20 @@
 1. Utilized a `LineMarkersManager` script to manage the start and end points.  
 2. Combined the `LineMarkersManager` script with a `LoadNextLevel` script to handle scene transitions.
 
+#### [Feature 4: Leaderboard]
+**Description**: Implementing a leaderboard system to track and display player rankings based on their game performance.  
+**Progress**: 40% complete  
+**Issues**:  
+1. Highscore time doesn't display correctly on the first attempt. The leaderboard only updates after the game is re-run.  
+**Solution**:  
+1. Investigating potential fixes to ensure that highscore times display immediately after the first game session.
+
 ---
 
 📝 **Roadmap**
 
 - **Next Feature to be Added**: Camera that follows the mouse to make levels feel more dynamic.
-- **Next Milestone**: Reach 50 levels.
+- **Next Milestone**: adding time & date to the database.
 - **Critical Bugs to be Fixed Before Next Release**: Fix timer display in Main Menu and resolve Leaderboard issues.
 
 ---
