@@ -1,3 +1,6 @@
+// This script manages the leaderboard data for a player, including the highest level reached and the time spent.
+// It also provides methods to update the leaderboard data in the database and retrieve the player's leaderboard stats.
+
 using UnityEngine;
 using System.Collections;
 using UnityEngine.Networking;
@@ -9,22 +12,23 @@ public class LeaderboardManager : MonoBehaviour
     public string PlayerId { get; private set; }
     public string Username { get; private set; }
     public int HighestLevelReached { get; private set; }
-    public float TimeForHighestLevel { get; private set; } // Tijd voor de hoogste level
-    public int LastCompletedLevel { get; private set; } // Laatst volledig voltooide level
-    public float TimeForLastCompletedLevel { get; private set; } // Tijd voor de laatst voltooide level
+    public float TimeForHighestLevel { get; private set; } // Time for highest level
+    public int LastCompletedLevel { get; private set; } // Last fully completed level
+    public float TimeForLastCompletedLevel { get; private set; } // Time for last completed level
 
-    public int MinutesForHighestLevel { get; private set; } // Minuten voor hoogste level
-    public int SecondsForHighestLevel { get; private set; } // Seconden voor hoogste level
-    public int MillisecondsForHighestLevel { get; private set; } // Milliseconden voor hoogste level
+    public int MinutesForHighestLevel { get; private set; } // Minutes for highest level
+    public int SecondsForHighestLevel { get; private set; } // Seconds for highest level
+    public int MillisecondsForHighestLevel { get; private set; } // Milliseconds for highest level
 
     private string updateLevelUrl = "http://localhost:5033/api/leaderboard/update-highest-level";
 
+    // Ensures only one instance of LeaderboardManager exists across scenes.
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); // Blijf bestaan tussen scènes
+            DontDestroyOnLoad(gameObject); // Retain across scenes
         }
         else
         {
@@ -32,9 +36,7 @@ public class LeaderboardManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Stel gegevens in na het inloggen.
-    /// </summary>
+    // Set leaderboard data after login.
     public void SetLeaderboardData(string playerId, string username, int highestLevelReached, int minutes, int seconds, int milliseconds)
     {
         PlayerId = playerId;
@@ -49,9 +51,7 @@ public class LeaderboardManager : MonoBehaviour
                   $"HighestLevelReached={highestLevelReached}, Time={minutes:00}:{seconds:00}.{milliseconds:000}");
     }
 
-    /// <summary>
-    /// Update de laatst volledig voltooide level.
-    /// </summary>
+    // Update the last completed level and its time.
     public void UpdateLastCompletedLevel(int completedLevel, float timeElapsed)
     {
         LastCompletedLevel = completedLevel;
@@ -60,9 +60,7 @@ public class LeaderboardManager : MonoBehaviour
         Debug.Log($"Last completed level updated: {LastCompletedLevel} at {TimeForLastCompletedLevel} seconds.");
     }
 
-    /// <summary>
-    /// Update de hoogste level en sla de tijd op als deze hoger is dan de huidige.
-    /// </summary>
+    // Update the highest level reached and its time if higher than the current level.
     public void UpdateHighestLevel(int completedLevel, float timeElapsed)
     {
         if (completedLevel > HighestLevelReached)
@@ -72,17 +70,15 @@ public class LeaderboardManager : MonoBehaviour
 
             Debug.Log($"New highest level reached: {HighestLevelReached} at {TimeForHighestLevel} seconds.");
 
-            // Start een coroutine om de database bij te werken
+            // Start a coroutine to update the database with the new highest level and time.
             StartCoroutine(UpdateHighestLevelAndTimeInDatabase(timeElapsed, completedLevel));
         }
 
-        // Update het laatst volledig voltooide level
+        // Update the last completed level data as well.
         UpdateLastCompletedLevel(completedLevel, timeElapsed);
     }
 
-    /// <summary>
-    /// Update het hoogste level en de voltooiingstijd in de database.
-    /// </summary>
+    // Update the highest level and completion time in the database.
     public IEnumerator UpdateHighestLevelAndTimeInDatabase(float timeElapsed, int achievedLevel)
     {
         int minutes = Mathf.FloorToInt(timeElapsed / 60);
@@ -118,9 +114,7 @@ public class LeaderboardManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Haal het leaderboard op uit de database.
-    /// </summary>
+    // Retrieve the player's leaderboard stats from the database.
     public IEnumerator GetLeaderboardFromDatabase(System.Action<Leaderboard> onStatsRetrieved)
     {
         string url = $"http://localhost:5033/api/leaderboard/{PlayerId}";
@@ -137,7 +131,7 @@ public class LeaderboardManager : MonoBehaviour
             else
             {
                 Debug.LogError($"Failed to retrieve leaderboard: {request.error}");
-                onStatsRetrieved?.Invoke(null); // Stuur null als de aanvraag mislukt
+                onStatsRetrieved?.Invoke(null); // Send null if request fails
             }
         }
     }

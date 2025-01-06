@@ -1,3 +1,5 @@
+// This script handles the timer functionality, including tracking elapsed time, updating the UI, and resetting or reducing the time.
+
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;

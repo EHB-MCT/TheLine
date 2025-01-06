@@ -1,19 +1,22 @@
+// This script handles collisions with obstacles, tracks the time elapsed, stops the game when a collision occurs, 
+// and updates the player's stats for deaths caused by obstacles.
+
 using UnityEngine;
 using System.Collections;
 using UnityEngine.Networking;
 
 public class ObstacleCollisionChecker : MonoBehaviour
 {
-    [SerializeField] private StopGame stopGame; // Reference to the StopGame script
-    [SerializeField] private LineDrawer lineDrawer; // Reference to the LineDrawer script
-    private float startTime; // Houd de starttijd bij
+    [SerializeField] private StopGame stopGame;  // Reference to the StopGame script to stop the game when an obstacle is hit
+    [SerializeField] private LineDrawer lineDrawer;  // Reference to the LineDrawer script to stop line drawing on collision
+    private float startTime;  // Track the start time of the game or level
 
     void Start()
     {
-        // Stel de starttijd in bij het begin van het spel of level.
+        // Set the start time when the game or level begins.
         startTime = Time.time;
 
-        // Controleer of de vereiste componenten zijn toegewezen.
+        // Verify that the required components are properly assigned in the Inspector.
         if (stopGame == null)
         {
             Debug.LogError("StopGame script is not assigned in the Inspector!");
@@ -23,26 +26,30 @@ public class ObstacleCollisionChecker : MonoBehaviour
             Debug.LogError("LineDrawer script is not assigned in the Inspector!");
         }
     }
-void OnTriggerEnter2D(Collider2D other)
-{
-    if (other.CompareTag("obstacle"))
+
+    // Triggered when the line collides with an obstacle.
+    void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log("Obstacle hit!");
+        if (other.CompareTag("obstacle"))  // Check if the collided object is tagged as "obstacle"
+        {
+            Debug.Log("Obstacle hit!");
 
-        // Bereken verstreken tijd
-        float timeElapsed = Time.time - startTime;
+            // Calculate the time elapsed since the game started
+            float timeElapsed = Time.time - startTime;
 
-        // Update PlayerStats via API
-        string playerId = LeaderboardManager.Instance.PlayerId;
-        int currentLevel = LeaderboardManager.Instance.LastCompletedLevel + 1; // Stel het huidige level in
+            // Update PlayerStats via API for the death caused by the obstacle
+            string playerId = LeaderboardManager.Instance.PlayerId;
+            int currentLevel = LeaderboardManager.Instance.LastCompletedLevel + 1;  // Set the current level
 
-        StartCoroutine(UpdateStatsForObstacleDeath(playerId, currentLevel));
+            // Update player stats and stop the game
+            StartCoroutine(UpdateStatsForObstacleDeath(playerId, currentLevel));
 
-        // Stop the game and line drawing
-        stopGame?.StopGameProcess(lineDrawer, timeElapsed);
+            // Stop the game and line drawing after collision
+            stopGame?.StopGameProcess(lineDrawer, timeElapsed);
+        }
     }
-}
 
+    // Update the player stats when a death caused by an obstacle occurs
     private IEnumerator UpdateStatsForObstacleDeath(string playerId, int level)
     {
         string updateStatsUrl = "http://localhost:5033/api/playerstats/update-stats";
@@ -51,9 +58,9 @@ void OnTriggerEnter2D(Collider2D other)
         {
             playerId = playerId,
             level = level,
-            playsToAdd = 0, // Geen nieuwe play toevoegen
-            deathsByLine = 0,
-            deathsByObstacles = 1, // 1 dood door obstakel
+            playsToAdd = 0,  // No new plays added
+            deathsByLine = 0,  // No death by line
+            deathsByObstacles = 1,  // 1 death caused by obstacle
             timeIconsCollected = 0
         };
 

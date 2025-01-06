@@ -1,16 +1,19 @@
+// This script checks for self-intersections in a drawn line, stops the game when an intersection is detected, and updates player stats accordingly.
+// It tracks the time elapsed, sends player stats to the API, and resets the intersection status when needed.
+
 using UnityEngine;
 using System.Collections;
 using UnityEngine.Networking;
-using System.Collections.Generic; // Voor de List<T> type
+using System.Collections.Generic; // For the List<T> type
 
 [RequireComponent(typeof(LineDrawer))]
 public class LineSelfIntersectionChecker : MonoBehaviour
 {
-    private LineDrawer lineDrawer;
-    private bool isIntersected = false;
+    private LineDrawer lineDrawer;  // Reference to the LineDrawer component for managing the drawn line
+    private bool isIntersected = false;  // Flag to track if a self-intersection has occurred
 
-    [SerializeField] private StopGame stopGame; // Reference to the StopGame script
-    private float startTime; // Houd de starttijd bij
+    [SerializeField] private StopGame stopGame;  // Reference to the StopGame script to stop the game when necessary
+    private float startTime;  // Time when the line drawing starts
 
     void Start()
     {
@@ -27,7 +30,7 @@ public class LineSelfIntersectionChecker : MonoBehaviour
             Debug.LogError("StopGame script is not assigned in the Inspector!");
         }
 
-        // Stel de starttijd in
+        // Set the start time when the game begins.
         startTime = Time.time;
     }
 
@@ -37,26 +40,29 @@ public class LineSelfIntersectionChecker : MonoBehaviour
         {
             List<Vector3> points = lineDrawer.GetPoints();
 
+            // Check if the line has self-intersected
             if (CheckForSelfIntersection(points))
             {
                 Debug.Log("GAME OVER! The line has self-intersected.");
                 isIntersected = true;
 
-                // Bereken de verstreken tijd
+                // Calculate the elapsed time since the start
                 float timeElapsed = Time.time - startTime;
 
-                // Update PlayerStats via API
+                // Update PlayerStats via API with the new death information
                 string playerId = LeaderboardManager.Instance.PlayerId;
-                int currentLevel = LeaderboardManager.Instance.LastCompletedLevel + 1; // Stel het huidige level in
+                int currentLevel = LeaderboardManager.Instance.LastCompletedLevel + 1;  // Set the current level
 
+                // Update player stats and stop the game
                 StartCoroutine(UpdateStatsForLineIntersection(playerId, currentLevel));
 
-                // Stop the game
+                // Stop the game process
                 stopGame?.StopGameProcess(lineDrawer, timeElapsed);
             }
         }
     }
 
+    // Update the player stats when a line intersection occurs
     private IEnumerator UpdateStatsForLineIntersection(string playerId, int level)
     {
         string updateStatsUrl = "http://localhost:5033/api/playerstats/update-stats";
@@ -65,8 +71,8 @@ public class LineSelfIntersectionChecker : MonoBehaviour
         {
             playerId = playerId,
             level = level,
-            playsToAdd = 0, // Geen nieuwe play toevoegen
-            deathsByLine = 1, // 1 dood door lijn
+            playsToAdd = 0,  // No new plays added
+            deathsByLine = 1,  // 1 death caused by line intersection
             deathsByObstacles = 0,
             timeIconsCollected = 0
         };
@@ -93,26 +99,26 @@ public class LineSelfIntersectionChecker : MonoBehaviour
         }
     }
 
-    // Check if the line intersects itself based on a list of points.
+    // Check if the line intersects itself based on a list of points
     public bool CheckForSelfIntersection(List<Vector3> points)
     {
         if (points.Count < 2)
         {
-            return false; // Not enough points to cause a self-intersection.
+            return false;  // Not enough points to cause a self-intersection
         }
 
         Vector3 lastPoint = points[points.Count - 1];
 
-        // Compare the last point with previous points in the list.
+        // Compare the last point with previous points in the list for intersection
         for (int i = 0; i < points.Count - 1; i++)
         {
-            if (Vector3.Distance(lastPoint, points[i]) < 0.1f) // Use a threshold for precision.
+            if (Vector3.Distance(lastPoint, points[i]) < 0.1f)  // Threshold for precision in intersection
             {
-                return true;
+                return true;  // Intersection detected
             }
         }
 
-        return false;
+        return false;  // No intersection found
     }
 
     [System.Serializable]
@@ -126,9 +132,9 @@ public class LineSelfIntersectionChecker : MonoBehaviour
         public int timeIconsCollected;
     }
 
-    // Reset the intersection status to allow a new line to be drawn without issues.
+    // Reset the intersection status to allow a new line to be drawn without issues
     public void ResetIntersection()
     {
-        isIntersected = false;
+        isIntersected = false;  // Reset the self-intersection flag
     }
 }
