@@ -31,6 +31,10 @@ public class LoadNextScene : MonoBehaviour
         // Controleer en update hoogste level en sla tijd op in LeaderboardManager
         LeaderboardManager.Instance.UpdateHighestLevel(currentSceneIndex, elapsedTime);
 
+        // Meld dat het huidige level voltooid is
+        LevelCompletionHandler levelCompletionHandler = gameObject.AddComponent<LevelCompletionHandler>();
+        levelCompletionHandler.OnLevelComplete(currentSceneIndex);
+
         // Check of het volgende level beschikbaar is
         if (nextSceneIndex < SceneManager.sceneCountInBuildSettings)
         {

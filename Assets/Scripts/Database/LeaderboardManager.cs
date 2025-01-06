@@ -7,6 +7,7 @@ public class LeaderboardManager : MonoBehaviour
     public static LeaderboardManager Instance { get; private set; }
 
     public string PlayerId { get; private set; }
+    public string Username { get; private set; }
     public int HighestLevelReached { get; private set; }
     public float TimeForHighestLevel { get; private set; } // Tijd voor de hoogste level
     public int LastCompletedLevel { get; private set; } // Laatst volledig voltooide level
@@ -15,8 +16,6 @@ public class LeaderboardManager : MonoBehaviour
     public int MinutesForHighestLevel { get; private set; } // Minuten voor hoogste level
     public int SecondsForHighestLevel { get; private set; } // Seconden voor hoogste level
     public int MillisecondsForHighestLevel { get; private set; } // Milliseconden voor hoogste level
-
-    public string Username { get; private set; }
 
     private string updateLevelUrl = "http://localhost:5033/api/leaderboard/update-highest-level";
 
@@ -32,6 +31,10 @@ public class LeaderboardManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
+    /// <summary>
+    /// Stel gegevens in na het inloggen.
+    /// </summary>
     public void SetLeaderboardData(string playerId, string username, int highestLevelReached, int minutes, int seconds, int milliseconds)
     {
         PlayerId = playerId;
@@ -42,34 +45,44 @@ public class LeaderboardManager : MonoBehaviour
         MillisecondsForHighestLevel = milliseconds;
 
         Debug.Log($"LeaderboardManager initialized: " +
-                $"PlayerId={playerId}, Username={username}, " +
-                $"HighestLevelReached={highestLevelReached}, Time={minutes:00}:{seconds:00}.{milliseconds:000}");
+                  $"PlayerId={playerId}, Username={username}, " +
+                  $"HighestLevelReached={highestLevelReached}, Time={minutes:00}:{seconds:00}.{milliseconds:000}");
     }
 
-    public void UpdateLastCompletedLevel(int attemptedLevel, float timeElapsed)
+    /// <summary>
+    /// Update de laatst volledig voltooide level.
+    /// </summary>
+    public void UpdateLastCompletedLevel(int completedLevel, float timeElapsed)
     {
-        // Het laatst volledig voltooide level is het level vóór het huidige
-        LastCompletedLevel = attemptedLevel - 1;
+        LastCompletedLevel = completedLevel;
         TimeForLastCompletedLevel = timeElapsed;
 
         Debug.Log($"Last completed level updated: {LastCompletedLevel} at {TimeForLastCompletedLevel} seconds.");
     }
 
-
+    /// <summary>
+    /// Update de hoogste level en sla de tijd op als deze hoger is dan de huidige.
+    /// </summary>
     public void UpdateHighestLevel(int completedLevel, float timeElapsed)
     {
         if (completedLevel > HighestLevelReached)
         {
-            HighestLevelReached = completedLevel - 1;
+            HighestLevelReached = completedLevel;
             TimeForHighestLevel = timeElapsed;
+
             Debug.Log($"New highest level reached: {HighestLevelReached} at {TimeForHighestLevel} seconds.");
+
+            // Start een coroutine om de database bij te werken
+            StartCoroutine(UpdateHighestLevelAndTimeInDatabase(timeElapsed, completedLevel));
         }
 
         // Update het laatst volledig voltooide level
         UpdateLastCompletedLevel(completedLevel, timeElapsed);
     }
 
-
+    /// <summary>
+    /// Update het hoogste level en de voltooiingstijd in de database.
+    /// </summary>
     public IEnumerator UpdateHighestLevelAndTimeInDatabase(float timeElapsed, int achievedLevel)
     {
         int minutes = Mathf.FloorToInt(timeElapsed / 60);
@@ -105,6 +118,9 @@ public class LeaderboardManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Haal het leaderboard op uit de database.
+    /// </summary>
     public IEnumerator GetLeaderboardFromDatabase(System.Action<Leaderboard> onStatsRetrieved)
     {
         string url = $"http://localhost:5033/api/leaderboard/{PlayerId}";
@@ -130,7 +146,7 @@ public class LeaderboardManager : MonoBehaviour
     public class UpdateTimeRequest
     {
         public string PlayerId;
-        public int NewLevel; 
+        public int NewLevel;
         public int Minutes;
         public int Seconds;
         public int Milliseconds;
