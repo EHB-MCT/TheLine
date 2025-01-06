@@ -1,23 +1,34 @@
-/*
- * This script handles collisions with objects tagged as "TimeIcon". 
- * On collision, it reduces the remaining time by 2 seconds and destroys the object.
- */
-
 using UnityEngine;
 
 public class TimeCollisionHandler : MonoBehaviour
 {
     void OnTriggerEnter2D(Collider2D other)
     {
-        // Check if the colliding object has the tag "TimeIcon".
         if (other.CompareTag("TimeIcon"))
         {
             Debug.Log("TimeIcon hit! The object will be destroyed.");
 
-            // Reduce the remaining time by 2 seconds via the Timer.
-            Timer.Instance.ReduceTime(2f);
+            // Controleer of de instantie van TimeIconManager niet null is
+            if (TimeIconManager.Instance != null)
+            {
+                TimeIconManager.Instance.AddTimeIcon();
+            }
+            else
+            {
+                Debug.LogError("TimeIconManager instance is null. Make sure the TimeIconManager is in the scene.");
+            }
 
-            // Destroy the colliding object.
+            // Controleer of de instantie van Timer niet null is
+            if (Timer.Instance != null)
+            {
+                Timer.Instance.ReduceTime(2f);
+            }
+            else
+            {
+                Debug.LogError("Timer instance is null. Make sure the Timer is in the scene.");
+            }
+
+            // Vernietig het TimeIcon-object
             Destroy(other.gameObject);
         }
     }

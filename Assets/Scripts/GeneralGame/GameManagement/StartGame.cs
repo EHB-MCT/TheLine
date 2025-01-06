@@ -8,6 +8,11 @@ public class StartGame : MonoBehaviour
         if (Login.IsLoggedIn)
         {
             Debug.Log("Starting the game...");
+            
+            // Meld dat level 1 wordt gestart
+            LevelCompletionHandler levelCompletionHandler = gameObject.AddComponent<LevelCompletionHandler>();
+            levelCompletionHandler.OnLevelComplete(1); // Level 1 is de eerste scene met stats
+            
             SceneManager.LoadScene(2); // Laad het eerste level
         }
         else

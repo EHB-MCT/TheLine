@@ -5,30 +5,29 @@ public class StopGame : MonoBehaviour
     [SerializeField] private GameOverPopup gameOverPopup; // Reference to the GameOverPopup
 
     // Stop het spel door de tijd te bevriezen
-    public void StopGameProcess(LineDrawer lineDrawer)
+    public void StopGameProcess(LineDrawer lineDrawer, float timeElapsed)
     {
-        Time.timeScale = 0f; // Freeze time
+        Time.timeScale = 0f;
 
-        // Toon het Game Over popup
+        // Haal de laatst voltooide levelgegevens op
+        int lastCompletedLevel = LeaderboardManager.Instance.LastCompletedLevel;
+        float timeForLastCompletedLevel = LeaderboardManager.Instance.TimeForLastCompletedLevel;
+
+        Debug.Log($"Game over! Last completed level: {lastCompletedLevel}, Time: {timeForLastCompletedLevel} seconds.");
+
+        // Update de database met de correcte tijd en level
+        LeaderboardManager.Instance.StartCoroutine(
+            LeaderboardManager.Instance.UpdateHighestLevelAndTimeInDatabase(timeForLastCompletedLevel, lastCompletedLevel)
+        );
+
+        // Toon de popup met alleen de huidige poging
         if (gameOverPopup != null)
         {
-            gameOverPopup.ShowGameOverPopup(); // Toon het Game Over popup
-        }
-        else
-        {
-            Debug.LogError("GameOverPopup component not assigned in the Inspector!");
+            gameOverPopup.ShowGameOverPopup(lastCompletedLevel, timeForLastCompletedLevel);
         }
 
-        // Stop de tekenfunctionaliteit
+        // Stop de tekenactiviteit
         StopDrawing stopDrawing = lineDrawer.GetComponent<StopDrawing>();
-        if (stopDrawing != null)
-        {
-            stopDrawing.StopDrawingProcess(); // Stop de tekeningen
-        }
-        else
-        {
-            Debug.LogError("StopDrawing component not found on LineDrawer.");
-        }
+        stopDrawing?.StopDrawingProcess();
     }
 }
-

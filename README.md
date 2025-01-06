@@ -11,6 +11,7 @@
   - [Game Controls](#game-controls)
   - [Features](#features)
   - [How to Play](#how-to-play)
+  - [Run \& See Database](#run--see-database)
   - [Getting Started](#getting-started)
     - [Prerequisites](#prerequisites)
     - [Installation](#installation)
@@ -26,7 +27,14 @@
 
 ## Screenshots
 
-![Main Menu](Images/MainMenu.png)
+- **Main Menu**
+  ![Main Menu](Images/MainMenu.png)
+
+- **First Level**
+  ![First Level](Images/Level1.png)
+
+- **Leaderboard**
+  ![Leaderboard](Images/Leaderboard.png)
 
 ---
 
@@ -52,6 +60,14 @@
 2. **Guide the Line:** Use the mouse to trace a path from point A to point B.
 3. **Avoid Obstacles:** Ensure your line doesn’t touch obstacles or its own trail.
 4. **Time is Key:** Reach the goal as quickly as possible to secure a top spot on the leaderboard.
+5. **Resolution** Play on Full HD (1920 x 1080) with a scale of 0.58x is recommended.
+
+## Run & See Database
+1. **Make Connection with Database:**  
+   `PS C:\Users\alexa\OneDrive\Bureaublad\EHB\DEV\TheLine\TheLineAPI> dotnet run`
+2. **MongoDB Link:**  
+   `mongodb+srv://<name>:<password>@theline.aibwn.mongodb.net/?retryWrites=true&w=majority&appName=TheLine`
+3. **Name & Password:** Found in the remark box of the assignment.
 
 ---
 
@@ -154,3 +170,15 @@ This project is licensed under the Apache License - see the [LICENSE.md](LICENSE
 
 - Organizing and Optimizing Directory Structure  
   https://chatgpt.com/c/67714998-b8ec-8003-b973-3eb1a47cbea3
+
+- Game Manager & Player Stats
+  https://chatgpt.com/share/677b31d9-3034-8008-9c4c-3f5599626d44
+
+- MongoDB Service Implementation
+  https://chatgpt.com/share/677b3222-1b80-8008-bdef-106c39729bbb
+
+- Unity MongoDB API Integration
+  https://chatgpt.com/share/677b3266-5290-800a-952c-8d8eb82b483f
+
+- Level Completion Logic
+  https://chatgpt.com/share/677b32c5-fcf8-800a-b01b-ecbc288c1820

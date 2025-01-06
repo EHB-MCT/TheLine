@@ -32,65 +32,80 @@ public class Login : MonoBehaviour
     }
 
     IEnumerator LoginProcess()
+{
+    if (string.IsNullOrEmpty(usernameField.text) || string.IsNullOrEmpty(passwordField.text))
     {
-        if (string.IsNullOrEmpty(usernameField.text) || string.IsNullOrEmpty(passwordField.text))
+        feedbackText.text = "Username and password cannot be empty!";
+        LastFeedbackMessage = feedbackText.text; 
+        yield break;
+    }
+
+    string json = JsonUtility.ToJson(new PlayerLoginData
+    {
+        username = usernameField.text,
+        password = passwordField.text
+    });
+
+    using (UnityWebRequest request = new UnityWebRequest(loginUrl, "POST"))
+    {
+        byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(json);
+        request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+        request.downloadHandler = new DownloadHandlerBuffer();
+        request.SetRequestHeader("Content-Type", "application/json");
+
+        yield return request.SendWebRequest();
+
+        if (request.result == UnityWebRequest.Result.Success)
         {
-            feedbackText.text = "Username and password cannot be empty!";
-            LastFeedbackMessage = feedbackText.text; // Update de persistente feedbacktekst
-            yield break;
+            feedbackText.text = "Login successful!";
+            LastFeedbackMessage = feedbackText.text;
+
+try
+{
+    PlayerLoginResponse response = JsonUtility.FromJson<PlayerLoginResponse>(request.downloadHandler.text);
+    Debug.Log($"Login successful for {response.username}! " +
+              $"PlayerID: {response.playerId}, " +
+              $"HighestLevelReached: {response.highestLevelReached}, " +
+              $"Time: {response.minutes:00}:{response.seconds:00}.{response.milliseconds:000}");
+
+    // Stel gegevens in via Leadeboard
+    LeaderboardManager.Instance.SetLeaderboardData(
+        response.playerId, 
+        response.username, 
+        response.highestLevelReached,
+        response.minutes,
+        response.seconds,
+        response.milliseconds
+    );
+}
+catch (System.Exception ex)
+{
+    Debug.LogError("Failed to parse response: " + ex.Message);
+}
+
+            IsLoggedIn = true;
         }
-
-        string json = JsonUtility.ToJson(new PlayerLoginData
+        else
         {
-            username = usernameField.text,
-            password = passwordField.text
-        });
-
-        using (UnityWebRequest request = new UnityWebRequest(loginUrl, "POST"))
-        {
-            byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(json);
-            request.uploadHandler = new UploadHandlerRaw(bodyRaw);
-            request.downloadHandler = new DownloadHandlerBuffer();
-            request.SetRequestHeader("Content-Type", "application/json");
-
-            yield return request.SendWebRequest();
-
-            if (request.result == UnityWebRequest.Result.Success)
-            {
-                feedbackText.text = "Login successful!";
-                LastFeedbackMessage = feedbackText.text;
-
-                // Parse de respons
-                try
-                {
-                    PlayerLoginResponse response = JsonUtility.FromJson<PlayerLoginResponse>(request.downloadHandler.text);
-                    Debug.Log("Highest Level Reached: " + response.highestLevelReached);
-
-                    // Stel gegevens in via PlayerManager
-                    PlayerManager.Instance.SetPlayerData(response.playerId, response.highestLevelReached);
-                }
-                catch (System.Exception ex)
-                {
-                    Debug.LogError("Failed to parse response: " + ex.Message);
-                }
-
-                IsLoggedIn = true; // Markeer als ingelogd
-            }
-            else
-            {
-                feedbackText.text = "Login failed: " + request.responseCode;
-                LastFeedbackMessage = feedbackText.text; // Update de persistente feedbacktekst
-                Debug.LogError("Error: " + request.error);
-            }
+            feedbackText.text = "Login failed: " + request.responseCode;
+            LastFeedbackMessage = feedbackText.text;
+            Debug.LogError("Error: " + request.error);
         }
     }
+}
 
     [System.Serializable]
     public class PlayerLoginResponse
     {
         public string message;
         public string playerId;
+        public string username;
         public int highestLevelReached;
+
+        // Voeg tijdvelden toe
+        public int minutes;
+        public int seconds;
+        public int milliseconds;
     }
 
     [System.Serializable]
